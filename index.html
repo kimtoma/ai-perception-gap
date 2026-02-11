@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 인식 격차</title>
+<title>Something Big Is Happening — AI Perception Gap</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <style>
   @font-face {
@@ -823,9 +823,116 @@
     .stat { padding: 1rem 0.25rem; }
     .stat-value { font-size: 1.5rem; }
   }
+
+  /* ── Language Switcher ── */
+  .lang-switch {
+    position: fixed;
+    top: 1rem;
+    right: 1.5rem;
+    z-index: 100;
+  }
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--text-secondary);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
+  }
+
+  .lang-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+
+  .lang-btn svg {
+    width: 12px;
+    height: 12px;
+    transition: transform var(--transition);
+  }
+
+  .lang-switch.open .lang-btn svg {
+    transform: rotate(180deg);
+  }
+
+  .lang-dropdown {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    right: 0;
+    min-width: 140px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: all var(--transition);
+  }
+
+  .lang-switch.open .lang-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .lang-option {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    font-family: inherit;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  .lang-option:first-child {
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .lang-option:last-child {
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+
+  .lang-option:hover {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+  }
+
+  .lang-option.active {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
 </style>
 </head>
 <body>
+
+<div class="lang-switch" id="langSwitch">
+  <button class="lang-btn" id="langBtn">
+    <span id="langCode">EN</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+  <div class="lang-dropdown">
+    <button class="lang-option active" data-lang="en">English</button>
+    <button class="lang-option" data-lang="ko">한국어</button>
+    <button class="lang-option" data-lang="zh">中文 (简体)</button>
+    <button class="lang-option" data-lang="es">Español</button>
+    <button class="lang-option" data-lang="hi">हिन्दी</button>
+  </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <div class="hero">
@@ -833,19 +940,19 @@
     <div class="hero-meta">
       <span>Matt Shumer</span>
       <span class="dot"></span>
-      <span>2026년 2월</span>
+      <span data-i18n="hero_date">February 2026</span>
     </div>
-    <h1>
-      당신이 보는 AI와<br>
-      <span class="em">실제 AI 사이의 거리</span>가<br>
-      점점 멀어지고 있습니다
+    <h1 data-i18n="hero_title">
+      The gap between the AI you see<br>
+      and <span class="em">the real AI</span><br>
+      is growing wider
     </h1>
-    <p class="lead">
-      테크 업계가 매일 체감하는 AI의 능력과, 일반 대중이 인식하는 AI 사이의 간극.
-      이 격차가 왜 위험한지, 실제 데이터로 보여드립니다.
+    <p class="lead" data-i18n="hero_lead">
+      The gap between the AI capabilities the tech industry experiences daily and what the general public perceives.
+      We show you with real data why this gap is dangerous.
     </p>
     <div class="scroll-hint" onclick="document.getElementById('gap').scrollIntoView({behavior:'smooth'})">
-      아래로 스크롤
+      <span data-i18n="hero_scroll">Scroll down</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M12 5v14M5 12l7 7 7-7"/>
       </svg>
@@ -853,60 +960,60 @@
   </div>
 </div>
 
-<!-- ===== 인식 격차 ===== -->
+<!-- ===== GAP ===== -->
 <section id="gap">
   <div class="container">
     <div class="reveal">
       <p class="overline">Perception Gap</p>
-      <h2>같은 시대, 완전히 다른 현실</h2>
-      <p class="lead">
-        대부분의 사람들은 무료 버전의 AI를 씁니다.
-        Matt Shumer는 이것을 <strong>"플립폰으로 스마트폰 시대를 평가하는 것"</strong>이라 표현합니다.
-        무료 AI는 최신 유료 모델보다 1년 이상 뒤처져 있습니다.
+      <h2 data-i18n="gap_h">Same Era, Completely Different Realities</h2>
+      <p class="lead" data-i18n="gap_lead">
+        Most people use the free version of AI.
+        Matt Shumer describes this as <strong>"judging the smartphone era with a flip phone."</strong>
+        Free AI is more than a year behind the latest paid models.
       </p>
     </div>
 
     <div class="compare-grid reveal">
       <div class="compare-card side-a">
-        <span class="tag">테크 업계</span>
-        <h3>최신 유료 모델 사용자</h3>
-        <blockquote>
-          "AI에게 앱 전체를 만들라고 하면,
-          스스로 테스트하고 반복 수정하며 완성합니다.
-          코드뿐 아니라 판단력까지 보입니다."
+        <span class="tag" data-i18n="cmp_tag_a">TECH INDUSTRY</span>
+        <h3 data-i18n="cmp_h3_a">Latest paid model users</h3>
+        <blockquote data-i18n="cmp_q_a">
+          "When you ask AI to build an entire app,
+          it tests itself, iterates, and completes it.
+          It shows not just coding ability, but judgment."
         </blockquote>
       </div>
       <div class="compare-card side-b">
-        <span class="tag">일반 대중</span>
-        <h3>무료 버전 사용자</h3>
-        <blockquote>
-          "가끔 쓸만한 답을 주지만 틀린 것도 많고,
-          복잡한 건 잘 못하는 챗봇 아닌가요?"
+        <span class="tag" data-i18n="cmp_tag_b">GENERAL PUBLIC</span>
+        <h3 data-i18n="cmp_h3_b">Free version users</h3>
+        <blockquote data-i18n="cmp_q_b">
+          "It gives useful answers sometimes, but gets a lot wrong too.
+          Isn't it just a chatbot that can't handle complex tasks?"
         </blockquote>
       </div>
     </div>
 
     <div class="card-muted reveal" style="margin-top:1.5rem">
-      <h3>AI 실제 능력 대비 인식 수준</h3>
-      <p class="caption" style="margin-bottom:1rem">그룹별로 AI의 현재 수준을 얼마나 정확히 파악하고 있는지</p>
+      <h3 data-i18n="meter_h">AI Capability Awareness by Group</h3>
+      <p class="caption" data-i18n="meter_cap" style="margin-bottom:1rem">How accurately each group understands AI's current level</p>
       <div class="meter-list">
         <div class="meter-item">
-          <div class="meter-label">AI 연구자</div>
+          <div class="meter-label" data-i18n="ml_1">AI Researchers</div>
           <div class="meter-track"><div class="meter-fill blue" data-width="92"></div></div>
           <div class="meter-value">92%</div>
         </div>
         <div class="meter-item">
-          <div class="meter-label">테크 종사자</div>
+          <div class="meter-label" data-i18n="ml_2">Tech Workers</div>
           <div class="meter-track"><div class="meter-fill blue" data-width="72"></div></div>
           <div class="meter-value">72%</div>
         </div>
         <div class="meter-item">
-          <div class="meter-label">테크 주변인</div>
+          <div class="meter-label" data-i18n="ml_3">Tech-Adjacent</div>
           <div class="meter-track"><div class="meter-fill amber" data-width="35"></div></div>
           <div class="meter-value">35%</div>
         </div>
         <div class="meter-item">
-          <div class="meter-label">일반 대중</div>
+          <div class="meter-label" data-i18n="ml_4">General Public</div>
           <div class="meter-track"><div class="meter-fill amber" data-width="12"></div></div>
           <div class="meter-value">12%</div>
         </div>
@@ -915,69 +1022,66 @@
   </div>
 </section>
 
-<!-- ===== AI 발전 속도 ===== -->
+<!-- ===== SPEED ===== -->
 <section id="speed">
   <div class="container">
     <div class="reveal">
       <p class="overline">Exponential Growth</p>
-      <h2>AI 발전은 지수함수를 따릅니다 — 그리고 가속 중입니다</h2>
-      <p class="lead">
-        METR 벤치마크에 따르면, AI 자율 작업 능력이
-        전체 기간으로는 <strong>약 6.5개월마다 2배</strong>,
-        2024년 이후로는 <strong>약 89일(~3개월)마다 2배</strong>로 가속되었습니다.
-        2월 5일 동시 출시된 GPT-5.3-Codex와 Claude Opus 4.6은 이 가속이 더 심해졌음을 보여줍니다.
+      <h2 data-i18n="speed_h">AI progress follows an exponential curve — and it's accelerating</h2>
+      <p class="lead" data-i18n="speed_lead">
+        According to METR benchmarks, AI autonomous task capability doubles every <strong>~6.5 months</strong> overall,
+        and has accelerated to <strong>every ~89 days (~3 months)</strong> since 2024.
+        GPT-5.3-Codex and Claude Opus 4.6, released simultaneously on Feb 5, show this acceleration intensifying.
       </p>
     </div>
 
     <div class="stats-grid reveal">
       <div class="stat">
-        <div class="stat-value">197<span class="stat-unit">일</span></div>
-        <div class="stat-desc">능력 2배 증가 주기<br>(전체 기간 평균)</div>
+        <div class="stat-value">197<span class="stat-unit" data-i18n="su_1">days</span></div>
+        <div class="stat-desc" data-i18n="sd_1">Capability doubling time<br>(overall average)</div>
       </div>
       <div class="stat">
-        <div class="stat-value">89<span class="stat-unit">일</span></div>
-        <div class="stat-desc">2024년 이후<br>가속된 2배 주기</div>
+        <div class="stat-value">89<span class="stat-unit" data-i18n="su_2">days</span></div>
+        <div class="stat-desc" data-i18n="sd_2">Accelerated doubling<br>time since 2024</div>
       </div>
       <div class="stat">
-        <div class="stat-value">6.6<span class="stat-unit">시간</span></div>
-        <div class="stat-desc">METR 공식 최고<br>(GPT-5.2 기준)</div>
+        <div class="stat-value">6.6<span class="stat-unit" data-i18n="su_3">hrs</span></div>
+        <div class="stat-desc" data-i18n="sd_3">METR official best<br>(GPT-5.2)</div>
       </div>
       <div class="stat">
         <div class="stat-value">~113<span class="stat-unit">x</span></div>
-        <div class="stat-desc">GPT-4 대비 2.7년간<br>능력 증가폭</div>
+        <div class="stat-desc" data-i18n="sd_4">Capability increase<br>vs GPT-4 over 2.7 years</div>
       </div>
     </div>
 
-    <!-- Chart 1: METR 실측 데이터 -->
     <div class="chart-card reveal">
       <div class="chart-header">
-        <h3>METR 벤치마크: 모델별 자율 작업 수행 시간</h3>
-        <p class="small">인간 전문가 도움 없이 AI가 50% 확률로 완료할 수 있는 작업 길이 (50% time horizon)</p>
+        <h3 data-i18n="metr_h">METR Benchmark: Autonomous Task Duration by Model</h3>
+        <p class="small" data-i18n="metr_sub">Task duration AI can complete with 50% probability without human expert help (50% time horizon)</p>
       </div>
       <div class="chart-area">
         <canvas id="metrChart"></canvas>
       </div>
-      <div class="chart-source">
-        출처: METR Time Horizon 1.1 (2026.01.29 업데이트). GPT-5.3-Codex, Opus 4.6은 출시 직후로 METR 공식 평가 미발표.
-        89일 더블링 추세 적용 시, 최신 모델의 시간 지평선은 10시간 이상으로 추정됩니다.
+      <div class="chart-source" data-i18n="metr_src">
+        Source: METR Time Horizon 1.1 (updated 2026.01.29). GPT-5.3-Codex and Opus 4.6 post-release; official METR evaluation not yet published.
+        Applying the 89-day doubling trend, latest models' time horizons are estimated at 10+ hours.
       </div>
     </div>
 
-    <!-- Feb 5 동시 출시 -->
     <div class="feb5-highlight reveal">
       <span class="date-badge">2026. 2. 5</span>
-      <h3>같은 날, 두 모델이 동시에 출시되었습니다</h3>
-      <p class="small" style="margin-bottom:1rem;max-width:560px">
-        OpenAI의 GPT-5.3-Codex와 Anthropic의 Claude Opus 4.6이 같은 날 공개되었습니다.
-        GPT-5.3-Codex는 "자기 자신을 만드는 데 기여한 최초의 모델"이라 발표했고,
-        Opus 4.6은 ARC-AGI-2에서 이전 세대 대비 거의 두 배 가까운 점프를 기록했습니다.
-        METR 공식 평가는 아직 발표되지 않았지만, 벤치마크 상승폭을 보면 곡선이 더 가팔라지고 있습니다.
+      <h3 data-i18n="feb5_h">Two models launched on the same day</h3>
+      <p class="small" data-i18n="feb5_p" style="margin-bottom:1rem;max-width:560px">
+        OpenAI's GPT-5.3-Codex and Anthropic's Claude Opus 4.6 were released on the same day.
+        GPT-5.3-Codex was announced as "the first model to contribute to building itself,"
+        while Opus 4.6 nearly doubled its predecessor's score on ARC-AGI-2.
+        Official METR evaluations haven't been published yet, but benchmark improvements show the curve steepening.
       </p>
       <div style="overflow-x:auto">
         <table class="bench-table">
           <thead>
             <tr>
-              <th>벤치마크</th>
+              <th data-i18n="bench_th">Benchmark</th>
               <th>GPT-5.2</th>
               <th>GPT-5.3-Codex<span class="new-badge">New</span></th>
               <th>Opus 4.5</th>
@@ -1051,94 +1155,92 @@
           </tbody>
         </table>
       </div>
-      <p class="caption" style="margin-top:0.75rem">
-        출처: OpenAI, Anthropic 공식 발표 (2026.02.05).
-        GPT-5.3-Codex는 25% 속도 향상 + 400K context. Opus 4.6은 1M context + adaptive thinking.
+      <p class="caption" data-i18n="feb5_cap" style="margin-top:0.75rem">
+        Source: OpenAI, Anthropic official announcements (2026.02.05).
+        GPT-5.3-Codex: 25% faster + 400K context. Opus 4.6: 1M context + adaptive thinking.
       </p>
     </div>
 
-    <!-- Chart: Feb 5 벤치마크 비교 -->
     <div class="chart-card reveal">
       <div class="chart-header">
-        <h3>2월 5일 출시 모델 vs 이전 세대 — 핵심 벤치마크 비교</h3>
-        <p class="small">같은 벤치마크에서 이전 세대 대비 얼마나 뛰었는지</p>
+        <h3 data-i18n="feb5c_h">Feb 5 Models vs Previous Gen — Key Benchmark Comparison</h3>
+        <p class="small" data-i18n="feb5c_sub">How much they improved over the previous generation on the same benchmarks</p>
       </div>
       <div class="chart-area">
         <canvas id="feb5Chart"></canvas>
       </div>
     </div>
 
-    <!-- Chart 2: 시계열 추세 -->
     <div class="chart-card reveal">
       <div class="chart-header">
-        <h3>AI 자율 작업 시간의 지수적 증가 추세</h3>
-        <p class="small">모델 출시 시점 기준, 50% time horizon 변화 (로그 스케일). 2024년 이후 곡선이 더 가팔라지고 있습니다.</p>
+        <h3 data-i18n="trend_h">Exponential Growth in AI Autonomous Task Duration</h3>
+        <p class="small" data-i18n="trend_sub">50% time horizon change by model release date (log scale). The curve has steepened since 2024.</p>
       </div>
       <div class="chart-area">
         <canvas id="trendChart"></canvas>
       </div>
-      <div class="chart-source">
-        출처: METR Time Horizon 1.1 / Epoch AI. 회색 점선은 전체 기간 추세(197일 더블링), 빨간 점선은 2024년 이후 가속 추세(89일 더블링).
+      <div class="chart-source" data-i18n="trend_src">
+        Source: METR Time Horizon 1.1 / Epoch AI. Gray dashed line: overall trend (197-day doubling). Red dashed line: post-2024 acceleration (89-day doubling).
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 타임라인 ===== -->
+<!-- ===== TIMELINE ===== -->
 <section id="timeline">
   <div class="container">
     <div class="reveal">
       <p class="overline">Timeline</p>
-      <h2>4년 사이에 일어난 일</h2>
-      <p class="lead">기본 산수도 못하던 AI가, 전문가 수준의 복잡한 작업을 자율 수행하기까지.</p>
+      <h2 data-i18n="tl_h">What Happened in 4 Years</h2>
+      <p class="lead" data-i18n="tl_lead">From AI that couldn't do basic arithmetic to autonomous expert-level complex tasks.</p>
     </div>
 
     <div class="timeline">
       <div class="tl-item">
-        <div class="tl-year">2022</div>
-        <div class="tl-text">ChatGPT 출시. 세상이 놀라지만, 기본 산술도 자주 틀리는 수준. AI 자율 작업 시간 측정 불가.</div>
+        <div class="tl-year" data-i18n="ty_1">2022</div>
+        <div class="tl-text" data-i18n="tt_1">ChatGPT launches. The world is amazed, but it frequently gets basic arithmetic wrong. Autonomous task time: unmeasurable.</div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">2023. 3</div>
-        <div class="tl-text">GPT-4 출시. 미국 변호사 시험 합격. METR 기준 자율 작업 시간 약 3.5분.</div>
+        <div class="tl-year" data-i18n="ty_2">2023. 3</div>
+        <div class="tl-text" data-i18n="tt_2">GPT-4 launches. Passes the US bar exam. METR autonomous task time: ~3.5 minutes.</div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">2024. 10</div>
-        <div class="tl-text">Claude 3.5 Sonnet. 완전한 소프트웨어 작성 가능. 자율 작업 시간 약 20분으로 성장.</div>
+        <div class="tl-year" data-i18n="ty_3">2024. 10</div>
+        <div class="tl-text" data-i18n="tt_3">Claude 3.5 Sonnet. Can write complete software. Autonomous task time grows to ~20 minutes.</div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">2025 상반기</div>
-        <div class="tl-text">Claude 3.7 Sonnet — 약 1시간. O3 — 약 1.6시간. 최고 엔지니어들이 코딩의 대부분을 AI에 위임하기 시작.</div>
+        <div class="tl-year" data-i18n="ty_4">H1 2025</div>
+        <div class="tl-text" data-i18n="tt_4">Claude 3.7 Sonnet — ~1 hour. O3 — ~1.6 hours. Top engineers begin delegating most coding to AI.</div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">2025 하반기</div>
-        <div class="tl-text">Gemini 3 Pro — 약 4시간. Claude Opus 4.5 — 약 5.3시간. MathArena Apex에서 1%→23%로 20배 도약.</div>
+        <div class="tl-year" data-i18n="ty_5">H2 2025</div>
+        <div class="tl-text" data-i18n="tt_5">Gemini 3 Pro — ~4 hours. Claude Opus 4.5 — ~5.3 hours. MathArena Apex: 1% to 23%, a 20x leap.</div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">2025. 12</div>
-        <div class="tl-text">GPT-5.2 — METR 기준 약 6.6시간(394분). 역대 최고 기록. "이전의 모든 것이 다른 시대처럼 느껴진다."</div>
+        <div class="tl-year" data-i18n="ty_6">2025. 12</div>
+        <div class="tl-text" data-i18n="tt_6">GPT-5.2 — ~6.6 hours (394 min) on METR. All-time record. "Everything before feels like a different era."</div>
       </div>
       <div class="tl-item current">
-        <div class="tl-year">2026. 2. 5 — 현재</div>
-        <div class="tl-text">같은 날, GPT-5.3-Codex와 Claude Opus 4.6 동시 출시.
-          GPT-5.3-Codex는 Terminal-Bench에서 +13.3%p 점프하며 "자기 자신을 만드는 데 기여한 최초의 모델"이라 선언.
-          Opus 4.6은 ARC-AGI-2에서 37.6%→68.8%로 한 세대 만에 거의 두 배. 1M 토큰 컨텍스트. 더블링 주기 89일로 가속 확인.</div>
+        <div class="tl-year" data-i18n="ty_7">2026. 2. 5 — Present</div>
+        <div class="tl-text" data-i18n="tt_7">Same day: GPT-5.3-Codex and Claude Opus 4.6 launch simultaneously.
+          GPT-5.3-Codex jumps +13.3%p on Terminal-Bench, declared "the first model to contribute to building itself."
+          Opus 4.6 leaps from 37.6% to 68.8% on ARC-AGI-2 in one generation. 1M token context. Doubling time confirmed at 89 days.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 인터랙티브 슬라이더 ===== -->
+<!-- ===== INTERACTIVE ===== -->
 <section id="interactive">
   <div class="container">
     <div class="reveal">
       <p class="overline">Interactive</p>
-      <h2>직접 확인해보세요</h2>
+      <h2 data-i18n="int_h">See for Yourself</h2>
     </div>
 
     <div class="slider-card reveal">
-      <h3>AI 능력 타임머신</h3>
-      <p class="small">슬라이더를 움직여 각 시점의 AI 능력 수준을 확인하세요.</p>
+      <h3 data-i18n="sl_h">AI Capability Time Machine</h3>
+      <p class="small" data-i18n="sl_desc">Move the slider to see AI capability levels at each point in time.</p>
       <input type="range" min="2020" max="2027" value="2024" step="1" class="slider-input" id="yearSlider">
       <div class="slider-ticks">
         <span>2020</span><span>2021</span><span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span><span>2027</span>
@@ -1151,23 +1253,23 @@
   </div>
 </section>
 
-<!-- ===== 격차 차트 ===== -->
+<!-- ===== GAP CHART ===== -->
 <section id="gap-chart">
   <div class="container">
     <div class="reveal">
       <p class="overline">The Dangerous Gap</p>
-      <h2>벌어지는 간극이 왜 위험한가</h2>
-      <p class="lead">
-        AI의 실제 능력은 기하급수적으로 올라가지만,
-        일반 대중의 인식은 거의 움직이지 않습니다.
-        준비 없이 충격을 맞는 사회가 됩니다.
+      <h2 data-i18n="gc_h">Why the Growing Gap Is Dangerous</h2>
+      <p class="lead" data-i18n="gc_lead">
+        Actual AI capability is rising exponentially,
+        but public perception barely moves.
+        Society faces shocks it's not prepared for.
       </p>
     </div>
 
     <div class="chart-card reveal">
       <div class="chart-header">
-        <h3>AI 실제 능력 vs. 대중 인식</h3>
-        <p class="small">빨간 영역이 넓을수록 사회적 충격이 커집니다</p>
+        <h3 data-i18n="gc_ch">Actual AI Capability vs. Public Perception</h3>
+        <p class="small" data-i18n="gc_cs">The wider the red area, the greater the societal shock</p>
       </div>
       <div class="chart-area">
         <canvas id="gapChart"></canvas>
@@ -1175,145 +1277,145 @@
     </div>
 
     <div class="callout reveal">
-      <div class="callout-label">경고</div>
-      <p>
-        "향후 1~5년 내에 초급 사무직의 50%가 제거될 수 있습니다.
-        AI가 현재 세대보다 본질적으로 훨씬 더 뛰어난 모델을
-        스스로 만들 수 있는 시점까지 1~2년밖에 남지 않았습니다."
+      <div class="callout-label" data-i18n="co_label">WARNING</div>
+      <p data-i18n="co_text">
+        "Within the next 1–5 years, 50% of entry-level office jobs could be eliminated.
+        We are only 1–2 years away from AI being able to build models
+        that are fundamentally far superior to the current generation."
       </p>
-      <div class="attr">— Dario Amodei, CEO of Anthropic, 2025</div>
+      <div class="attr" data-i18n="co_attr">— Dario Amodei, CEO of Anthropic, 2025</div>
     </div>
   </div>
 </section>
 
-<!-- ===== 직업 영향 ===== -->
+<!-- ===== JOBS ===== -->
 <section id="jobs">
   <div class="container">
     <div class="reveal">
       <p class="overline">Impact</p>
-      <h2>이미 위협받고 있는 직업들</h2>
-      <p class="small" style="margin-bottom:0.5rem">항목을 클릭하면 상세 내용을 확인할 수 있습니다.</p>
+      <h2 data-i18n="jobs_h">Jobs Already Under Threat</h2>
+      <p class="small" data-i18n="jobs_hint" style="margin-bottom:0.5rem">Click an item to see details.</p>
     </div>
 
     <div class="job-list reveal">
       <div class="job-item" data-risk="95">
         <div class="job-header">
-          <span class="job-name">고객 서비스 / 상담</span>
+          <span class="job-name" data-i18n="jn_1">Customer Service</span>
           <div style="display:flex;align-items:center;gap:0.5rem">
             <span class="job-risk-badge high">95%</span>
             <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
         </div>
         <div class="job-bar"><div class="job-bar-fill"></div></div>
-        <div class="job-detail">복잡한 다단계 문제 해결이 가능해지면서, 단순 응대를 넘어 전문 상담 영역까지 AI가 대체하고 있습니다.</div>
+        <div class="job-detail" data-i18n="jd_1">With complex multi-step problem solving now possible, AI is replacing not just simple inquiries but expert consulting roles.</div>
       </div>
 
       <div class="job-item" data-risk="90">
         <div class="job-header">
-          <span class="job-name">소프트웨어 개발</span>
+          <span class="job-name" data-i18n="jn_2">Software Development</span>
           <div style="display:flex;align-items:center;gap:0.5rem">
             <span class="job-risk-badge high">90%</span>
             <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
         </div>
         <div class="job-bar"><div class="job-bar-fill"></div></div>
-        <div class="job-detail">수십만 줄의 코드를 자동 생성하며, 최고 엔지니어들도 코딩의 대부분을 AI에 위임합니다. "코드를 짜는 것"이 아닌 "AI를 지시하는 것"이 개발자의 역할이 되고 있습니다.</div>
+        <div class="job-detail" data-i18n="jd_2">AI auto-generates hundreds of thousands of lines of code. Even top engineers delegate most coding to AI. The developer's role is shifting from "writing code" to "directing AI."</div>
       </div>
 
       <div class="job-item" data-risk="85">
         <div class="job-header">
-          <span class="job-name">법률 / 법무</span>
+          <span class="job-name" data-i18n="jn_3">Legal / Law</span>
           <div style="display:flex;align-items:center;gap:0.5rem">
             <span class="job-risk-badge high">85%</span>
             <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
         </div>
         <div class="job-bar"><div class="job-bar-fill"></div></div>
-        <div class="job-detail">계약 검토, 판례 분석, 소장 초안 작성을 AI가 인간 변호사와 동등하거나 그 이상 수준으로 수행합니다. 로펌들은 이미 주니어 채용을 줄이고 있습니다.</div>
+        <div class="job-detail" data-i18n="jd_3">AI performs contract review, case analysis, and brief drafting at or above human lawyer level. Law firms are already reducing junior hires.</div>
       </div>
 
       <div class="job-item" data-risk="80">
         <div class="job-header">
-          <span class="job-name">금융 / 분석</span>
+          <span class="job-name" data-i18n="jn_4">Finance / Analysis</span>
           <div style="display:flex;align-items:center;gap:0.5rem">
             <span class="job-risk-badge high">80%</span>
             <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
         </div>
         <div class="job-bar"><div class="job-bar-fill"></div></div>
-        <div class="job-detail">재무 모델링, 데이터 분석, 리포트 작성이 자동화되고 있습니다. 투자 분석 보고서를 AI가 수 분 만에 생성합니다.</div>
+        <div class="job-detail" data-i18n="jd_4">Financial modeling, data analysis, and report writing are being automated. AI generates investment analysis reports in minutes.</div>
       </div>
 
       <div class="job-item" data-risk="75">
         <div class="job-header">
-          <span class="job-name">콘텐츠 / 마케팅</span>
+          <span class="job-name" data-i18n="jn_5">Content / Marketing</span>
           <div style="display:flex;align-items:center;gap:0.5rem">
             <span class="job-risk-badge medium">75%</span>
             <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
         </div>
         <div class="job-bar"><div class="job-bar-fill"></div></div>
-        <div class="job-detail">광고 카피, 블로그 글, SNS 콘텐츠, 번역 등 글쓰기 기반 업무가 대규모로 자동화되고 있습니다.</div>
+        <div class="job-detail" data-i18n="jd_5">Ad copy, blog posts, social media content, and translation — writing-based work is being automated at scale.</div>
       </div>
 
       <div class="job-item" data-risk="70">
         <div class="job-header">
-          <span class="job-name">의료 / 진단</span>
+          <span class="job-name" data-i18n="jn_6">Medical / Diagnostics</span>
           <div style="display:flex;align-items:center;gap:0.5rem">
             <span class="job-risk-badge medium">70%</span>
             <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
         </div>
         <div class="job-bar"><div class="job-bar-fill"></div></div>
-        <div class="job-detail">영상 판독, 초기 진단에서 전문의와 동등한 정확도를 달성했습니다. 방사선과, 병리과 분야에서 특히 영향이 큽니다.</div>
+        <div class="job-detail" data-i18n="jd_6">AI has achieved specialist-level accuracy in image reading and initial diagnosis. Radiology and pathology are especially impacted.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== CTA ===== -->
+<!-- ===== ACTION ===== -->
 <section id="action">
   <div class="container">
     <div class="reveal">
       <p class="overline">What You Can Do</p>
-      <h2>지금 할 수 있는 것들</h2>
-      <p class="lead">이 격차를 인식한 것만으로도 한 발 앞선 것입니다.</p>
+      <h2 data-i18n="act_h">What You Can Do Now</h2>
+      <p class="lead" data-i18n="act_lead">Recognizing this gap already puts you one step ahead.</p>
     </div>
 
     <div class="action-list reveal">
       <div class="action-item">
         <div class="action-num">1</div>
         <div>
-          <h4>최신 AI를 직접 사용하세요</h4>
-          <p>월 $20의 유료 구독으로 1년 이상의 기술 격차를 좁힐 수 있습니다.</p>
+          <h4 data-i18n="at_1">Try the latest AI yourself</h4>
+          <p data-i18n="ad_1">A $20/month subscription can close a 1+ year technology gap.</p>
         </div>
       </div>
       <div class="action-item">
         <div class="action-num">2</div>
         <div>
-          <h4>실제 업무에 적용하세요</h4>
-          <p>글쓰기, 분석, 코딩 등 매일 하는 업무에 AI를 통합해보세요.</p>
+          <h4 data-i18n="at_2">Apply it to real work</h4>
+          <p data-i18n="ad_2">Integrate AI into daily tasks like writing, analysis, and coding.</p>
         </div>
       </div>
       <div class="action-item">
         <div class="action-num">3</div>
         <div>
-          <h4>매일 1시간을 투자하세요</h4>
-          <p>AI 도구를 실험하는 데 하루 1시간. 한 달이면 완전히 다른 사람이 됩니다.</p>
+          <h4 data-i18n="at_3">Invest 1 hour every day</h4>
+          <p data-i18n="ad_3">One hour a day experimenting with AI tools. In a month, you'll be a completely different person.</p>
         </div>
       </div>
       <div class="action-item">
         <div class="action-num">4</div>
         <div>
-          <h4>적응력을 키우세요</h4>
-          <p>특정 기술이 아닌 "배우는 능력" 자체가 가장 중요한 자산이 됩니다.</p>
+          <h4 data-i18n="at_4">Build adaptability</h4>
+          <p data-i18n="ad_4">The ability to learn itself — not any specific skill — becomes your most valuable asset.</p>
         </div>
       </div>
       <div class="action-item">
         <div class="action-num">5</div>
         <div>
-          <h4>주변에 알려주세요</h4>
-          <p>격차를 줄이는 가장 빠른 방법은 이 사실을 공유하는 것입니다.</p>
+          <h4 data-i18n="at_5">Spread the word</h4>
+          <p data-i18n="ad_5">The fastest way to close the gap is to share this information.</p>
         </div>
       </div>
     </div>
@@ -1322,463 +1424,705 @@
 
 <footer>
   <div class="container">
-    <p>
-      이 페이지는 <a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">Matt Shumer의 포스트</a>와
-      <a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a>,
-      <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR 벤치마크</a>를 기반으로 구성되었습니다.
+    <p data-i18n="footer">
+      This page is based on <a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">Matt Shumer's post</a>,
+      <a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a>, and
+      <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR benchmarks</a>.
     </p>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+// ── i18n Translations ──
+let currentLang = 'en';
+const charts = {};
+let slider, yearEl, textEl;
 
-  // ── Reveal on scroll ──
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      e.target.classList.add('visible');
-      e.target.querySelectorAll('.meter-fill').forEach(f => {
-        f.style.width = f.dataset.width + '%';
-      });
-      e.target.querySelectorAll('.job-item').forEach(c => {
-        c.querySelector('.job-bar-fill').style.width = c.dataset.risk + '%';
-      });
-    });
-  }, { threshold: 0.12 });
+const T = {};
 
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+T.en = {
+  page_title: 'Something Big Is Happening — AI Perception Gap',
+  hero_date: 'February 2026',
+  hero_title: 'The gap between the AI you see<br>and <span class="em">the real AI</span><br>is growing wider',
+  hero_lead: 'The gap between the AI capabilities the tech industry experiences daily and what the general public perceives. We show you with real data why this gap is dangerous.',
+  hero_scroll: 'Scroll down',
+  gap_h: 'Same Era, Completely Different Realities',
+  gap_lead: 'Most people use the free version of AI. Matt Shumer describes this as <strong>"judging the smartphone era with a flip phone."</strong> Free AI is more than a year behind the latest paid models.',
+  cmp_tag_a: 'TECH INDUSTRY', cmp_h3_a: 'Latest paid model users',
+  cmp_q_a: '"When you ask AI to build an entire app, it tests itself, iterates, and completes it. It shows not just coding ability, but judgment."',
+  cmp_tag_b: 'GENERAL PUBLIC', cmp_h3_b: 'Free version users',
+  cmp_q_b: '"It gives useful answers sometimes, but gets a lot wrong too. Isn\'t it just a chatbot that can\'t handle complex tasks?"',
+  meter_h: 'AI Capability Awareness by Group',
+  meter_cap: 'How accurately each group understands AI\'s current level',
+  ml_1: 'AI Researchers', ml_2: 'Tech Workers', ml_3: 'Tech-Adjacent', ml_4: 'General Public',
+  speed_h: 'AI progress follows an exponential curve — and it\'s accelerating',
+  speed_lead: 'According to METR benchmarks, AI autonomous task capability doubles every <strong>~6.5 months</strong> overall, and has accelerated to <strong>every ~89 days (~3 months)</strong> since 2024. GPT-5.3-Codex and Claude Opus 4.6, released simultaneously on Feb 5, show this acceleration intensifying.',
+  su_1: 'days', sd_1: 'Capability doubling time<br>(overall average)',
+  su_2: 'days', sd_2: 'Accelerated doubling<br>time since 2024',
+  su_3: 'hrs', sd_3: 'METR official best<br>(GPT-5.2)',
+  sd_4: 'Capability increase<br>vs GPT-4 over 2.7 years',
+  metr_h: 'METR Benchmark: Autonomous Task Duration by Model',
+  metr_sub: 'Task duration AI can complete with 50% probability without human expert help (50% time horizon)',
+  metr_src: 'Source: METR Time Horizon 1.1 (updated 2026.01.29). GPT-5.3-Codex and Opus 4.6 post-release; official METR evaluation not yet published. Applying the 89-day doubling trend, latest models\' time horizons are estimated at 10+ hours.',
+  feb5_h: 'Two models launched on the same day',
+  feb5_p: 'OpenAI\'s GPT-5.3-Codex and Anthropic\'s Claude Opus 4.6 were released on the same day. GPT-5.3-Codex was announced as "the first model to contribute to building itself," while Opus 4.6 nearly doubled its predecessor\'s score on ARC-AGI-2. Official METR evaluations haven\'t been published yet, but benchmark improvements show the curve steepening.',
+  bench_th: 'Benchmark',
+  feb5_cap: 'Source: OpenAI, Anthropic official announcements (2026.02.05). GPT-5.3-Codex: 25% faster + 400K context. Opus 4.6: 1M context + adaptive thinking.',
+  feb5c_h: 'Feb 5 Models vs Previous Gen — Key Benchmark Comparison',
+  feb5c_sub: 'How much they improved over the previous generation on the same benchmarks',
+  trend_h: 'Exponential Growth in AI Autonomous Task Duration',
+  trend_sub: '50% time horizon change by model release date (log scale). The curve has steepened since 2024.',
+  trend_src: 'Source: METR Time Horizon 1.1 / Epoch AI. Gray dashed line: overall trend (197-day doubling). Red dashed line: post-2024 acceleration (89-day doubling).',
+  tl_h: 'What Happened in 4 Years',
+  tl_lead: 'From AI that couldn\'t do basic arithmetic to autonomous expert-level complex tasks.',
+  ty_1: '2022', tt_1: 'ChatGPT launches. The world is amazed, but it frequently gets basic arithmetic wrong. Autonomous task time: unmeasurable.',
+  ty_2: '2023. 3', tt_2: 'GPT-4 launches. Passes the US bar exam. METR autonomous task time: ~3.5 minutes.',
+  ty_3: '2024. 10', tt_3: 'Claude 3.5 Sonnet. Can write complete software. Autonomous task time grows to ~20 minutes.',
+  ty_4: 'H1 2025', tt_4: 'Claude 3.7 Sonnet — ~1 hour. O3 — ~1.6 hours. Top engineers begin delegating most coding to AI.',
+  ty_5: 'H2 2025', tt_5: 'Gemini 3 Pro — ~4 hours. Claude Opus 4.5 — ~5.3 hours. MathArena Apex: 1% to 23%, a 20x leap.',
+  ty_6: '2025. 12', tt_6: 'GPT-5.2 — ~6.6 hours (394 min) on METR. All-time record. "Everything before feels like a different era."',
+  ty_7: '2026. 2. 5 — Present', tt_7: 'Same day: GPT-5.3-Codex and Claude Opus 4.6 launch simultaneously. GPT-5.3-Codex jumps +13.3%p on Terminal-Bench, declared "the first model to contribute to building itself." Opus 4.6 leaps from 37.6% to 68.8% on ARC-AGI-2 in one generation. 1M token context. Doubling time confirmed at 89 days.',
+  int_h: 'See for Yourself', sl_h: 'AI Capability Time Machine',
+  sl_desc: 'Move the slider to see AI capability levels at each point in time.',
+  cap_2020: 'GPT-3 launches. It generates plausible sentences but facts are unreliable. Most people don\'t even know AI chatbots exist.',
+  cap_2021: 'GitHub Copilot preview. Code autocomplete is possible but widely dismissed as a toy.',
+  cap_2022: 'ChatGPT arrives. Gets basic arithmetic wrong often, but shows the world the potential of conversational AI.',
+  cap_2023: 'GPT-4 passes the bar exam. METR autonomous task time: 3.5 min. The public still sees AI as "an occasionally useful chatbot."',
+  cap_2024: 'Claude 3.5 Sonnet — autonomous tasks ~20 min. Can write complete software, explain graduate-level science. The tech industry starts taking this seriously.',
+  cap_2025: 'Claude 3.7 Sonnet 1hr, O3 1.6hr, Gemini 3 Pro 4hr, Claude Opus 4.5 5.3hr. Top engineers delegate most coding to AI.',
+  cap_2026: 'Feb 5: GPT-5.3-Codex and Claude Opus 4.6 launch the same day. GPT-5.3 is "the first model to contribute to building itself." Opus 4.6 leaps from 37.6% to 68.8% on ARC-AGI-2. Doubling time down to 89 days. Yet most people are still using free AI from 2023.',
+  cap_2027: 'If the 89-day doubling trend continues? AI autonomously completes multi-day complex projects. METR projects "month-long autonomous projects within a decade." Most knowledge work could be fundamentally redefined.',
+  gc_h: 'Why the Growing Gap Is Dangerous',
+  gc_lead: 'Actual AI capability is rising exponentially, but public perception barely moves. Society faces shocks it\'s not prepared for.',
+  gc_ch: 'Actual AI Capability vs. Public Perception',
+  gc_cs: 'The wider the red area, the greater the societal shock',
+  co_label: 'WARNING',
+  co_text: '"Within the next 1\u20135 years, 50% of entry-level office jobs could be eliminated. We are only 1\u20132 years away from AI being able to build models that are fundamentally far superior to the current generation."',
+  co_attr: '— Dario Amodei, CEO of Anthropic, 2025',
+  jobs_h: 'Jobs Already Under Threat', jobs_hint: 'Click an item to see details.',
+  jn_1: 'Customer Service', jd_1: 'With complex multi-step problem solving now possible, AI is replacing not just simple inquiries but expert consulting roles.',
+  jn_2: 'Software Development', jd_2: 'AI auto-generates hundreds of thousands of lines of code. Even top engineers delegate most coding to AI. The developer\'s role is shifting from "writing code" to "directing AI."',
+  jn_3: 'Legal / Law', jd_3: 'AI performs contract review, case analysis, and brief drafting at or above human lawyer level. Law firms are already reducing junior hires.',
+  jn_4: 'Finance / Analysis', jd_4: 'Financial modeling, data analysis, and report writing are being automated. AI generates investment analysis reports in minutes.',
+  jn_5: 'Content / Marketing', jd_5: 'Ad copy, blog posts, social media content, and translation — writing-based work is being automated at scale.',
+  jn_6: 'Medical / Diagnostics', jd_6: 'AI has achieved specialist-level accuracy in image reading and initial diagnosis. Radiology and pathology are especially impacted.',
+  act_h: 'What You Can Do Now', act_lead: 'Recognizing this gap already puts you one step ahead.',
+  at_1: 'Try the latest AI yourself', ad_1: 'A $20/month subscription can close a 1+ year technology gap.',
+  at_2: 'Apply it to real work', ad_2: 'Integrate AI into daily tasks like writing, analysis, and coding.',
+  at_3: 'Invest 1 hour every day', ad_3: 'One hour a day experimenting with AI tools. In a month, you\'ll be a completely different person.',
+  at_4: 'Build adaptability', ad_4: 'The ability to learn itself — not any specific skill — becomes your most valuable asset.',
+  at_5: 'Spread the word', ad_5: 'The fastest way to close the gap is to share this information.',
+  footer: 'This page is based on <a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">Matt Shumer\'s post</a>, <a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a>, and <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR benchmarks</a>.',
+  // Chart strings
+  c_m: ' min', c_h: ' hr',
+  c_rel: 'Released',
+  c_metr_y: 'Minutes',
+  c_f5_prev: 'Previous gen best (GPT-5.2 / Opus 4.5)',
+  c_f5_new: 'Feb 5 release (GPT-5.3 / Opus 4.6)',
+  c_f5_y: 'Accuracy (%)',
+  c_f5_inc: 'Increase',
+  c_tr_slow: 'Overall trend (197-day doubling)',
+  c_tr_fast: 'Post-2024 acceleration (89-day doubling)',
+  c_tr_data: 'METR actual data',
+  c_tr_x: 'Model release date',
+  c_tr_y: 'Autonomous task time (min, log scale)',
+  c_g_actual: 'Actual AI capability',
+  c_g_tech: 'Tech industry perception',
+  c_g_public: 'General public perception',
+  c_g_danger: 'Gap (danger zone)',
+  c_g_y: 'Level (0\u2013100)',
+  c_g_gap: 'Gap',
+  metr_dates: ['2023.03', '2024.10', 'Early 2025', 'Mid 2025', 'Late 2025', 'Late 2025', '2025.12']
+};
 
-  // ── Timeline items ──
-  const tlObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) e.target.classList.add('visible');
-    });
-  }, { threshold: 0.15 });
+T.ko = {
+  page_title: 'Something Big Is Happening — AI 인식 격차',
+  hero_date: '2026년 2월',
+  hero_title: '당신이 보는 AI와<br><span class="em">실제 AI 사이의 거리</span>가<br>점점 멀어지고 있습니다',
+  hero_lead: '테크 업계가 매일 체감하는 AI의 능력과, 일반 대중이 인식하는 AI 사이의 간극. 이 격차가 왜 위험한지, 실제 데이터로 보여드립니다.',
+  hero_scroll: '아래로 스크롤',
+  gap_h: '같은 시대, 완전히 다른 현실',
+  gap_lead: '대부분의 사람들은 무료 버전의 AI를 씁니다. Matt Shumer는 이것을 <strong>"플립폰으로 스마트폰 시대를 평가하는 것"</strong>이라 표현합니다. 무료 AI는 최신 유료 모델보다 1년 이상 뒤처져 있습니다.',
+  cmp_tag_a: '테크 업계', cmp_h3_a: '최신 유료 모델 사용자',
+  cmp_q_a: '"AI에게 앱 전체를 만들라고 하면, 스스로 테스트하고 반복 수정하며 완성합니다. 코드뿐 아니라 판단력까지 보입니다."',
+  cmp_tag_b: '일반 대중', cmp_h3_b: '무료 버전 사용자',
+  cmp_q_b: '"가끔 쓸만한 답을 주지만 틀린 것도 많고, 복잡한 건 잘 못하는 챗봇 아닌가요?"',
+  meter_h: 'AI 실제 능력 대비 인식 수준',
+  meter_cap: '그룹별로 AI의 현재 수준을 얼마나 정확히 파악하고 있는지',
+  ml_1: 'AI 연구자', ml_2: '테크 종사자', ml_3: '테크 주변인', ml_4: '일반 대중',
+  speed_h: 'AI 발전은 지수함수를 따릅니다 — 그리고 가속 중입니다',
+  speed_lead: 'METR 벤치마크에 따르면, AI 자율 작업 능력이 전체 기간으로는 <strong>약 6.5개월마다 2배</strong>, 2024년 이후로는 <strong>약 89일(~3개월)마다 2배</strong>로 가속되었습니다. 2월 5일 동시 출시된 GPT-5.3-Codex와 Claude Opus 4.6은 이 가속이 더 심해졌음을 보여줍니다.',
+  su_1: '일', sd_1: '능력 2배 증가 주기<br>(전체 기간 평균)',
+  su_2: '일', sd_2: '2024년 이후<br>가속된 2배 주기',
+  su_3: '시간', sd_3: 'METR 공식 최고<br>(GPT-5.2 기준)',
+  sd_4: 'GPT-4 대비 2.7년간<br>능력 증가폭',
+  metr_h: 'METR 벤치마크: 모델별 자율 작업 수행 시간',
+  metr_sub: '인간 전문가 도움 없이 AI가 50% 확률로 완료할 수 있는 작업 길이 (50% time horizon)',
+  metr_src: '출처: METR Time Horizon 1.1 (2026.01.29 업데이트). GPT-5.3-Codex, Opus 4.6은 출시 직후로 METR 공식 평가 미발표. 89일 더블링 추세 적용 시, 최신 모델의 시간 지평선은 10시간 이상으로 추정됩니다.',
+  feb5_h: '같은 날, 두 모델이 동시에 출시되었습니다',
+  feb5_p: 'OpenAI의 GPT-5.3-Codex와 Anthropic의 Claude Opus 4.6이 같은 날 공개되었습니다. GPT-5.3-Codex는 "자기 자신을 만드는 데 기여한 최초의 모델"이라 발표했고, Opus 4.6은 ARC-AGI-2에서 이전 세대 대비 거의 두 배 가까운 점프를 기록했습니다. METR 공식 평가는 아직 발표되지 않았지만, 벤치마크 상승폭을 보면 곡선이 더 가팔라지고 있습니다.',
+  bench_th: '벤치마크',
+  feb5_cap: '출처: OpenAI, Anthropic 공식 발표 (2026.02.05). GPT-5.3-Codex는 25% 속도 향상 + 400K context. Opus 4.6은 1M context + adaptive thinking.',
+  feb5c_h: '2월 5일 출시 모델 vs 이전 세대 — 핵심 벤치마크 비교',
+  feb5c_sub: '같은 벤치마크에서 이전 세대 대비 얼마나 뛰었는지',
+  trend_h: 'AI 자율 작업 시간의 지수적 증가 추세',
+  trend_sub: '모델 출시 시점 기준, 50% time horizon 변화 (로그 스케일). 2024년 이후 곡선이 더 가팔라지고 있습니다.',
+  trend_src: '출처: METR Time Horizon 1.1 / Epoch AI. 회색 점선은 전체 기간 추세(197일 더블링), 빨간 점선은 2024년 이후 가속 추세(89일 더블링).',
+  tl_h: '4년 사이에 일어난 일',
+  tl_lead: '기본 산수도 못하던 AI가, 전문가 수준의 복잡한 작업을 자율 수행하기까지.',
+  ty_1: '2022', tt_1: 'ChatGPT 출시. 세상이 놀라지만, 기본 산술도 자주 틀리는 수준. AI 자율 작업 시간 측정 불가.',
+  ty_2: '2023. 3', tt_2: 'GPT-4 출시. 미국 변호사 시험 합격. METR 기준 자율 작업 시간 약 3.5분.',
+  ty_3: '2024. 10', tt_3: 'Claude 3.5 Sonnet. 완전한 소프트웨어 작성 가능. 자율 작업 시간 약 20분으로 성장.',
+  ty_4: '2025 상반기', tt_4: 'Claude 3.7 Sonnet — 약 1시간. O3 — 약 1.6시간. 최고 엔지니어들이 코딩의 대부분을 AI에 위임하기 시작.',
+  ty_5: '2025 하반기', tt_5: 'Gemini 3 Pro — 약 4시간. Claude Opus 4.5 — 약 5.3시간. MathArena Apex에서 1%→23%로 20배 도약.',
+  ty_6: '2025. 12', tt_6: 'GPT-5.2 — METR 기준 약 6.6시간(394분). 역대 최고 기록. "이전의 모든 것이 다른 시대처럼 느껴진다."',
+  ty_7: '2026. 2. 5 — 현재', tt_7: '같은 날, GPT-5.3-Codex와 Claude Opus 4.6 동시 출시. GPT-5.3-Codex는 Terminal-Bench에서 +13.3%p 점프하며 "자기 자신을 만드는 데 기여한 최초의 모델"이라 선언. Opus 4.6은 ARC-AGI-2에서 37.6%→68.8%로 한 세대 만에 거의 두 배. 1M 토큰 컨텍스트. 더블링 주기 89일로 가속 확인.',
+  int_h: '직접 확인해보세요', sl_h: 'AI 능력 타임머신',
+  sl_desc: '슬라이더를 움직여 각 시점의 AI 능력 수준을 확인하세요.',
+  cap_2020: 'GPT-3 출시. 그럴듯한 문장을 생성하지만 사실 관계가 불안정합니다. 대부분의 사람들은 AI 챗봇의 존재조차 모릅니다.',
+  cap_2021: 'GitHub Copilot 프리뷰. 코드 자동완성이 가능해지지만, 장난감 수준이라는 평가가 지배적입니다.',
+  cap_2022: 'ChatGPT 등장. 기본 산술도 자주 틀리지만, 대화형 AI의 가능성을 세상에 알렸습니다.',
+  cap_2023: 'GPT-4가 변호사 시험 합격. METR 기준 자율 작업 시간 3.5분. 대중은 여전히 \'가끔 쓸만한 챗봇\' 정도로 봅니다.',
+  cap_2024: 'Claude 3.5 Sonnet — 자율 작업 약 20분. 완전한 소프트웨어 작성, 대학원 수준 과학 설명 가능. 테크 업계가 심각해지기 시작합니다.',
+  cap_2025: 'Claude 3.7 Sonnet 1시간, O3 1.6시간, Gemini 3 Pro 4시간, Claude Opus 4.5 5.3시간. 최고 엔지니어들이 코딩의 대부분을 AI에 위임합니다.',
+  cap_2026: '2월 5일, GPT-5.3-Codex와 Claude Opus 4.6이 같은 날 출시. GPT-5.3은 \'자기 자신을 만드는 데 기여한 최초의 모델\'. Opus 4.6은 ARC-AGI-2에서 37.6%→68.8%로 도약. 능력 더블링 주기가 89일로 단축. 그런데 대부분의 사람들은 아직 2023년 수준의 무료 AI를 쓰고 있습니다.',
+  cap_2027: '현재 89일 더블링 추세가 계속된다면? AI가 며칠짜리 복잡한 프로젝트를 완전 자율 수행. METR는 \'10년 내 월 단위 프로젝트 자율 수행 가능\'이라 전망합니다. 대부분의 지식노동이 근본적으로 재정의될 수 있습니다.',
+  gc_h: '벌어지는 간극이 왜 위험한가',
+  gc_lead: 'AI의 실제 능력은 기하급수적으로 올라가지만, 일반 대중의 인식은 거의 움직이지 않습니다. 준비 없이 충격을 맞는 사회가 됩니다.',
+  gc_ch: 'AI 실제 능력 vs. 대중 인식',
+  gc_cs: '빨간 영역이 넓을수록 사회적 충격이 커집니다',
+  co_label: '경고',
+  co_text: '"향후 1~5년 내에 초급 사무직의 50%가 제거될 수 있습니다. AI가 현재 세대보다 본질적으로 훨씬 더 뛰어난 모델을 스스로 만들 수 있는 시점까지 1~2년밖에 남지 않았습니다."',
+  co_attr: '— Dario Amodei, CEO of Anthropic, 2025',
+  jobs_h: '이미 위협받고 있는 직업들', jobs_hint: '항목을 클릭하면 상세 내용을 확인할 수 있습니다.',
+  jn_1: '고객 서비스 / 상담', jd_1: '복잡한 다단계 문제 해결이 가능해지면서, 단순 응대를 넘어 전문 상담 영역까지 AI가 대체하고 있습니다.',
+  jn_2: '소프트웨어 개발', jd_2: '수십만 줄의 코드를 자동 생성하며, 최고 엔지니어들도 코딩의 대부분을 AI에 위임합니다. "코드를 짜는 것"이 아닌 "AI를 지시하는 것"이 개발자의 역할이 되고 있습니다.',
+  jn_3: '법률 / 법무', jd_3: '계약 검토, 판례 분석, 소장 초안 작성을 AI가 인간 변호사와 동등하거나 그 이상 수준으로 수행합니다. 로펌들은 이미 주니어 채용을 줄이고 있습니다.',
+  jn_4: '금융 / 분석', jd_4: '재무 모델링, 데이터 분석, 리포트 작성이 자동화되고 있습니다. 투자 분석 보고서를 AI가 수 분 만에 생성합니다.',
+  jn_5: '콘텐츠 / 마케팅', jd_5: '광고 카피, 블로그 글, SNS 콘텐츠, 번역 등 글쓰기 기반 업무가 대규모로 자동화되고 있습니다.',
+  jn_6: '의료 / 진단', jd_6: '영상 판독, 초기 진단에서 전문의와 동등한 정확도를 달성했습니다. 방사선과, 병리과 분야에서 특히 영향이 큽니다.',
+  act_h: '지금 할 수 있는 것들', act_lead: '이 격차를 인식한 것만으로도 한 발 앞선 것입니다.',
+  at_1: '최신 AI를 직접 사용하세요', ad_1: '월 $20의 유료 구독으로 1년 이상의 기술 격차를 좁힐 수 있습니다.',
+  at_2: '실제 업무에 적용하세요', ad_2: '글쓰기, 분석, 코딩 등 매일 하는 업무에 AI를 통합해보세요.',
+  at_3: '매일 1시간을 투자하세요', ad_3: 'AI 도구를 실험하는 데 하루 1시간. 한 달이면 완전히 다른 사람이 됩니다.',
+  at_4: '적응력을 키우세요', ad_4: '특정 기술이 아닌 "배우는 능력" 자체가 가장 중요한 자산이 됩니다.',
+  at_5: '주변에 알려주세요', ad_5: '격차를 줄이는 가장 빠른 방법은 이 사실을 공유하는 것입니다.',
+  footer: '이 페이지는 <a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">Matt Shumer의 포스트</a>와 <a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a>, <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR 벤치마크</a>를 기반으로 구성되었습니다.',
+  c_m: '분', c_h: '시간', c_rel: '출시',
+  c_metr_y: '분 (minutes)',
+  c_f5_prev: '이전 세대 최고 (GPT-5.2 / Opus 4.5)',
+  c_f5_new: '2월 5일 출시 (GPT-5.3 / Opus 4.6)',
+  c_f5_y: '정확도 (%)', c_f5_inc: '상승폭',
+  c_tr_slow: '전체 기간 추세 (197일 더블링)',
+  c_tr_fast: '2024년 이후 가속 추세 (89일 더블링)',
+  c_tr_data: 'METR 실측 데이터',
+  c_tr_x: '모델 출시 시점',
+  c_tr_y: '자율 작업 시간 (분, log scale)',
+  c_g_actual: 'AI 실제 능력', c_g_tech: '테크 업계 인식',
+  c_g_public: '일반 대중 인식', c_g_danger: '격차 (위험 영역)',
+  c_g_y: '수준 (0–100)', c_g_gap: '격차',
+  metr_dates: ['2023.03', '2024.10', '2025 초', '2025 중', '2025 말', '2025 말', '2025.12']
+};
 
-  document.querySelectorAll('.tl-item').forEach((el, i) => {
-    el.style.transitionDelay = (i * 80) + 'ms';
-    tlObs.observe(el);
+T.zh = {
+  page_title: 'Something Big Is Happening — AI 认知差距',
+  hero_date: '2026年2月',
+  hero_title: '你看到的AI与<br><span class="em">真实AI之间的距离</span><br>正在不断扩大',
+  hero_lead: '科技行业每天感受到的AI能力与普通大众认知之间的鸿沟。我们用真实数据展示这个差距为何危险。',
+  hero_scroll: '向下滚动',
+  gap_h: '同一时代，完全不同的现实',
+  gap_lead: '大多数人使用的是免费版AI。Matt Shumer将此描述为<strong>"用翻盖手机评判智能手机时代"</strong>。免费AI比最新付费模型落后一年以上。',
+  cmp_tag_a: '科技行业', cmp_h3_a: '最新付费模型用户',
+  cmp_q_a: '"让AI构建整个应用程序时，它会自行测试、迭代并完成。它展现的不仅是编码能力，还有判断力。"',
+  cmp_tag_b: '普通大众', cmp_h3_b: '免费版用户',
+  cmp_q_b: '"偶尔给出有用的答案，但经常出错。不就是个处理不了复杂任务的聊天机器人吗？"',
+  meter_h: '各群体对AI能力的认知水平',
+  meter_cap: '各群体对AI当前水平的了解程度',
+  ml_1: 'AI研究人员', ml_2: '科技从业者', ml_3: '科技相关人员', ml_4: '普通大众',
+  speed_h: 'AI发展遵循指数曲线——而且正在加速',
+  speed_lead: '根据METR基准测试，AI自主任务能力总体上每<strong>约6.5个月翻一倍</strong>，2024年以来已加速至<strong>每约89天（约3个月）翻一倍</strong>。2月5日同时发布的GPT-5.3-Codex和Claude Opus 4.6表明这种加速正在加剧。',
+  su_1: '天', sd_1: '能力翻倍周期<br>（总体平均）',
+  su_2: '天', sd_2: '2024年后<br>加速翻倍周期',
+  su_3: '小时', sd_3: 'METR官方最高<br>（GPT-5.2）',
+  sd_4: '相比GPT-4<br>2.7年间能力增长',
+  metr_h: 'METR基准：各模型自主任务持续时间',
+  metr_sub: 'AI在无人类专家帮助下以50%概率完成的任务时长（50%时间范围）',
+  metr_src: '来源：METR Time Horizon 1.1（2026.01.29更新）。GPT-5.3-Codex和Opus 4.6发布后，METR官方评估尚未公布。按89天翻倍趋势推算，最新模型时间范围预计达10小时以上。',
+  feb5_h: '同一天，两个模型同时发布',
+  feb5_p: 'OpenAI的GPT-5.3-Codex和Anthropic的Claude Opus 4.6在同一天发布。GPT-5.3-Codex被宣布为"首个参与构建自身的模型"，而Opus 4.6在ARC-AGI-2上几乎将前代分数翻倍。METR官方评估尚未公布，但基准提升表明曲线正在变陡。',
+  bench_th: '基准测试',
+  feb5_cap: '来源：OpenAI、Anthropic官方公告（2026.02.05）。GPT-5.3-Codex：速度提升25% + 400K上下文。Opus 4.6：1M上下文 + 自适应思维。',
+  feb5c_h: '2月5日模型 vs 上一代——核心基准对比',
+  feb5c_sub: '在相同基准上比上一代提升了多少',
+  trend_h: 'AI自主任务时间的指数级增长趋势',
+  trend_sub: '按模型发布时间的50%时间范围变化（对数刻度）。2024年后曲线更加陡峭。',
+  trend_src: '来源：METR Time Horizon 1.1 / Epoch AI。灰色虚线：总体趋势（197天翻倍）。红色虚线：2024年后加速趋势（89天翻倍）。',
+  tl_h: '四年间发生了什么',
+  tl_lead: '从连基本算术都做不好的AI，到自主执行专家级复杂任务。',
+  ty_1: '2022', tt_1: 'ChatGPT发布。世界惊叹，但基本算术经常出错。自主任务时间：无法测量。',
+  ty_2: '2023. 3', tt_2: 'GPT-4发布。通过美国律师资格考试。METR自主任务时间：约3.5分钟。',
+  ty_3: '2024. 10', tt_3: 'Claude 3.5 Sonnet。能编写完整软件。自主任务时间增长至约20分钟。',
+  ty_4: '2025上半年', tt_4: 'Claude 3.7 Sonnet——约1小时。O3——约1.6小时。顶级工程师开始将大部分编码委托给AI。',
+  ty_5: '2025下半年', tt_5: 'Gemini 3 Pro——约4小时。Claude Opus 4.5——约5.3小时。MathArena Apex从1%到23%，20倍飞跃。',
+  ty_6: '2025. 12', tt_6: 'GPT-5.2——METR约6.6小时（394分钟）。历史最高纪录。"之前的一切感觉像另一个时代。"',
+  ty_7: '2026. 2. 5 — 当前', tt_7: '同一天：GPT-5.3-Codex和Claude Opus 4.6同时发布。GPT-5.3-Codex在Terminal-Bench上跃升+13.3%p，宣称"首个参与构建自身的模型"。Opus 4.6在ARC-AGI-2上从37.6%跃至68.8%。1M token上下文。翻倍周期确认为89天。',
+  int_h: '亲自体验', sl_h: 'AI能力时光机',
+  sl_desc: '拖动滑块查看各时期的AI能力水平。',
+  cap_2020: 'GPT-3发布。能生成看似合理的句子，但事实不可靠。大多数人甚至不知道AI聊天机器人的存在。',
+  cap_2021: 'GitHub Copilot预览版。代码自动补全成为可能，但普遍被视为玩具。',
+  cap_2022: 'ChatGPT登场。基本算术经常出错，但向世界展示了对话式AI的潜力。',
+  cap_2023: 'GPT-4通过律师资格考试。METR自主任务时间3.5分钟。公众仍视AI为"偶尔有用的聊天机器人"。',
+  cap_2024: 'Claude 3.5 Sonnet——自主任务约20分钟。能编写完整软件，解释研究生水平科学。科技行业开始认真对待。',
+  cap_2025: 'Claude 3.7 Sonnet 1小时，O3 1.6小时，Gemini 3 Pro 4小时，Claude Opus 4.5 5.3小时。顶级工程师将大部分编码委托给AI。',
+  cap_2026: '2月5日，GPT-5.3-Codex和Claude Opus 4.6同日发布。GPT-5.3是"首个参与构建自身的模型"。Opus 4.6在ARC-AGI-2上从37.6%跃至68.8%。翻倍周期缩短至89天。然而大多数人仍在使用2023年水平的免费AI。',
+  cap_2027: '如果89天翻倍趋势持续？AI将自主完成多天的复杂项目。METR预测"十年内可自主执行月级项目"。大多数知识工作可能被根本性地重新定义。',
+  gc_h: '不断扩大的差距为何危险',
+  gc_lead: 'AI实际能力呈指数级上升，但公众认知几乎不动。社会将面临毫无准备的冲击。',
+  gc_ch: 'AI实际能力 vs. 公众认知',
+  gc_cs: '红色区域越宽，社会冲击越大',
+  co_label: '警告',
+  co_text: '"在未来1-5年内，50%的初级办公室职位可能被淘汰。距离AI能够构建从根本上远超当前一代的模型，只剩1-2年。"',
+  co_attr: '— Dario Amodei，Anthropic CEO，2025',
+  jobs_h: '已经受到威胁的职业', jobs_hint: '点击项目查看详情。',
+  jn_1: '客户服务', jd_1: '随着复杂多步骤问题解决成为可能，AI正在替代的不仅是简单咨询，还包括专业顾问角色。',
+  jn_2: '软件开发', jd_2: 'AI自动生成数十万行代码。即使顶级工程师也将大部分编码委托给AI。开发者的角色正从"写代码"转变为"指挥AI"。',
+  jn_3: '法律/法务', jd_3: 'AI以等同或超越人类律师的水平执行合同审查、案例分析和文书起草。律所已开始减少初级招聘。',
+  jn_4: '金融/分析', jd_4: '财务建模、数据分析和报告撰写正在被自动化。AI数分钟内即可生成投资分析报告。',
+  jn_5: '内容/营销', jd_5: '广告文案、博客文章、社交媒体内容和翻译——基于写作的工作正在被大规模自动化。',
+  jn_6: '医疗/诊断', jd_6: 'AI在影像判读和初步诊断方面已达到专家级准确度。放射科和病理科受影响尤为严重。',
+  act_h: '你现在能做什么', act_lead: '认识到这个差距，你就已经领先了一步。',
+  at_1: '亲自使用最新AI', ad_1: '每月$20的订阅可以缩小1年以上的技术差距。',
+  at_2: '应用到实际工作中', ad_2: '将AI融入写作、分析、编码等日常任务。',
+  at_3: '每天投入1小时', ad_3: '每天花1小时实验AI工具。一个月后你将判若两人。',
+  at_4: '培养适应力', ad_4: '学习能力本身——而非特定技能——将成为你最有价值的资产。',
+  at_5: '告诉身边的人', ad_5: '缩小差距最快的方式就是分享这些信息。',
+  footer: '本页面基于<a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">Matt Shumer的帖子</a>、<a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a>和<a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR基准测试</a>构建。',
+  c_m: '分钟', c_h: '小时', c_rel: '发布',
+  c_metr_y: '分钟',
+  c_f5_prev: '上一代最佳（GPT-5.2 / Opus 4.5）',
+  c_f5_new: '2月5日发布（GPT-5.3 / Opus 4.6）',
+  c_f5_y: '准确率（%）', c_f5_inc: '提升幅度',
+  c_tr_slow: '总体趋势（197天翻倍）',
+  c_tr_fast: '2024年后加速趋势（89天翻倍）',
+  c_tr_data: 'METR实测数据',
+  c_tr_x: '模型发布时间', c_tr_y: '自主任务时间（分钟，对数刻度）',
+  c_g_actual: 'AI实际能力', c_g_tech: '科技行业认知',
+  c_g_public: '普通大众认知', c_g_danger: '差距（危险区域）',
+  c_g_y: '水平（0–100）', c_g_gap: '差距',
+  metr_dates: ['2023.03', '2024.10', '2025年初', '2025年中', '2025年末', '2025年末', '2025.12']
+};
+
+T.es = {
+  page_title: 'Something Big Is Happening — Brecha de percepción de la IA',
+  hero_date: 'Febrero 2026',
+  hero_title: 'La distancia entre la IA que ves<br>y <span class="em">la IA real</span><br>se está ampliando',
+  hero_lead: 'La brecha entre las capacidades de IA que la industria tecnológica experimenta a diario y lo que percibe el público general. Te mostramos con datos reales por qué esta brecha es peligrosa.',
+  hero_scroll: 'Desplázate hacia abajo',
+  gap_h: 'Misma época, realidades completamente diferentes',
+  gap_lead: 'La mayoría usa la versión gratuita de la IA. Matt Shumer lo describe como <strong>"juzgar la era del smartphone con un teléfono plegable."</strong> La IA gratuita está más de un año por detrás de los últimos modelos de pago.',
+  cmp_tag_a: 'INDUSTRIA TECH', cmp_h3_a: 'Usuarios de modelos de pago',
+  cmp_q_a: '"Cuando le pides a la IA que construya una app completa, se prueba a sí misma, itera y la completa. Muestra no solo capacidad de codificación, sino criterio."',
+  cmp_tag_b: 'PÚBLICO GENERAL', cmp_h3_b: 'Usuarios de la versión gratuita',
+  cmp_q_b: '"A veces da respuestas útiles, pero se equivoca mucho. ¿No es solo un chatbot que no puede manejar tareas complejas?"',
+  meter_h: 'Conocimiento de la capacidad de IA por grupo',
+  meter_cap: 'Qué tan acertadamente cada grupo comprende el nivel actual de la IA',
+  ml_1: 'Investigadores IA', ml_2: 'Trabajadores tech', ml_3: 'Cercanos al tech', ml_4: 'Público general',
+  speed_h: 'El progreso de la IA sigue una curva exponencial — y se está acelerando',
+  speed_lead: 'Según los benchmarks METR, la capacidad de tareas autónomas de la IA se duplica cada <strong>~6.5 meses</strong> en general, y se ha acelerado a <strong>cada ~89 días (~3 meses)</strong> desde 2024. GPT-5.3-Codex y Claude Opus 4.6, lanzados simultáneamente el 5 de febrero, muestran que esta aceleración se intensifica.',
+  su_1: 'días', sd_1: 'Tiempo de duplicación<br>(promedio general)',
+  su_2: 'días', sd_2: 'Duplicación acelerada<br>desde 2024',
+  su_3: 'hrs', sd_3: 'Mejor oficial METR<br>(GPT-5.2)',
+  sd_4: 'Aumento de capacidad<br>vs GPT-4 en 2.7 años',
+  metr_h: 'Benchmark METR: Duración de tareas autónomas por modelo',
+  metr_sub: 'Duración de tareas que la IA puede completar con 50% de probabilidad sin ayuda humana experta',
+  metr_src: 'Fuente: METR Time Horizon 1.1 (actualizado 2026.01.29). GPT-5.3-Codex y Opus 4.6 post-lanzamiento; evaluación oficial METR aún no publicada. Aplicando la tendencia de duplicación de 89 días, los horizontes de tiempo de los últimos modelos se estiman en 10+ horas.',
+  feb5_h: 'Dos modelos lanzados el mismo día',
+  feb5_p: 'GPT-5.3-Codex de OpenAI y Claude Opus 4.6 de Anthropic se lanzaron el mismo día. GPT-5.3-Codex fue anunciado como "el primer modelo en contribuir a construirse a sí mismo," mientras que Opus 4.6 casi duplicó la puntuación de su predecesor en ARC-AGI-2. Las evaluaciones oficiales de METR aún no se han publicado, pero las mejoras en benchmarks muestran que la curva se está empinando.',
+  bench_th: 'Benchmark',
+  feb5_cap: 'Fuente: Anuncios oficiales de OpenAI, Anthropic (2026.02.05). GPT-5.3-Codex: 25% más rápido + 400K contexto. Opus 4.6: 1M contexto + pensamiento adaptativo.',
+  feb5c_h: 'Modelos del 5 de feb vs generación anterior — Comparación de benchmarks clave',
+  feb5c_sub: 'Cuánto mejoraron respecto a la generación anterior en los mismos benchmarks',
+  trend_h: 'Crecimiento exponencial del tiempo de tarea autónoma de IA',
+  trend_sub: 'Cambio del horizonte temporal al 50% por fecha de lanzamiento (escala log). La curva se ha empinado desde 2024.',
+  trend_src: 'Fuente: METR Time Horizon 1.1 / Epoch AI. Línea gris punteada: tendencia general (duplicación 197 días). Línea roja punteada: aceleración post-2024 (duplicación 89 días).',
+  tl_h: 'Lo que ocurrió en 4 años',
+  tl_lead: 'De una IA que no podía hacer aritmética básica a tareas complejas autónomas de nivel experto.',
+  ty_1: '2022', tt_1: 'Se lanza ChatGPT. El mundo se asombra, pero frecuentemente falla en aritmética básica. Tiempo de tarea autónoma: no medible.',
+  ty_2: '2023. 3', tt_2: 'Se lanza GPT-4. Aprueba el examen de abogacía de EE.UU. Tiempo autónomo METR: ~3.5 minutos.',
+  ty_3: '2024. 10', tt_3: 'Claude 3.5 Sonnet. Puede escribir software completo. Tiempo autónomo crece a ~20 minutos.',
+  ty_4: 'S1 2025', tt_4: 'Claude 3.7 Sonnet — ~1 hora. O3 — ~1.6 horas. Los mejores ingenieros empiezan a delegar la mayoría del código a la IA.',
+  ty_5: 'S2 2025', tt_5: 'Gemini 3 Pro — ~4 horas. Claude Opus 4.5 — ~5.3 horas. MathArena Apex: de 1% a 23%, un salto de 20x.',
+  ty_6: '2025. 12', tt_6: 'GPT-5.2 — ~6.6 horas (394 min) en METR. Récord histórico. "Todo lo anterior parece de otra era."',
+  ty_7: '2026. 2. 5 — Presente', tt_7: 'Mismo día: GPT-5.3-Codex y Claude Opus 4.6 se lanzan simultáneamente. GPT-5.3-Codex salta +13.3%p en Terminal-Bench, declarado "el primer modelo en contribuir a construirse a sí mismo." Opus 4.6 salta de 37.6% a 68.8% en ARC-AGI-2 en una generación. 1M tokens de contexto. Tiempo de duplicación confirmado en 89 días.',
+  int_h: 'Compruébalo tú mismo', sl_h: 'Máquina del tiempo de capacidad IA',
+  sl_desc: 'Mueve el deslizador para ver los niveles de capacidad de IA en cada momento.',
+  cap_2020: 'Se lanza GPT-3. Genera oraciones plausibles pero los hechos no son fiables. La mayoría no sabe que existen chatbots de IA.',
+  cap_2021: 'Vista previa de GitHub Copilot. El autocompletado de código es posible pero se considera un juguete.',
+  cap_2022: 'Llega ChatGPT. Falla frecuentemente en aritmética básica, pero muestra al mundo el potencial de la IA conversacional.',
+  cap_2023: 'GPT-4 aprueba el examen de abogacía. Tiempo autónomo METR: 3.5 min. El público aún ve la IA como "un chatbot ocasionalmente útil."',
+  cap_2024: 'Claude 3.5 Sonnet — tareas autónomas ~20 min. Puede escribir software completo, explicar ciencia de nivel posgrado. La industria tech empieza a tomarlo en serio.',
+  cap_2025: 'Claude 3.7 Sonnet 1h, O3 1.6h, Gemini 3 Pro 4h, Claude Opus 4.5 5.3h. Los mejores ingenieros delegan la mayoría del código a la IA.',
+  cap_2026: '5 de feb: GPT-5.3-Codex y Claude Opus 4.6 se lanzan el mismo día. GPT-5.3 es "el primer modelo en contribuir a construirse a sí mismo." Opus 4.6 salta de 37.6% a 68.8% en ARC-AGI-2. Duplicación en 89 días. Sin embargo, la mayoría sigue usando IA gratuita de nivel 2023.',
+  cap_2027: '¿Si la tendencia de duplicación de 89 días continúa? La IA completará proyectos complejos de varios días de forma autónoma. METR proyecta "proyectos autónomos de un mes en una década." La mayoría del trabajo intelectual podría redefinirse fundamentalmente.',
+  gc_h: 'Por qué la brecha creciente es peligrosa',
+  gc_lead: 'La capacidad real de la IA crece exponencialmente, pero la percepción pública apenas se mueve. La sociedad enfrenta impactos para los que no está preparada.',
+  gc_ch: 'Capacidad real de IA vs. Percepción pública',
+  gc_cs: 'Cuanto más amplia es el área roja, mayor es el impacto social',
+  co_label: 'ADVERTENCIA',
+  co_text: '"En los próximos 1-5 años, el 50% de los empleos de oficina de nivel inicial podrían eliminarse. Estamos a solo 1-2 años de que la IA pueda construir modelos fundamentalmente superiores a la generación actual."',
+  co_attr: '— Dario Amodei, CEO de Anthropic, 2025',
+  jobs_h: 'Empleos ya amenazados', jobs_hint: 'Haz clic en un elemento para ver detalles.',
+  jn_1: 'Atención al cliente', jd_1: 'Con la resolución de problemas complejos de múltiples pasos ahora posible, la IA reemplaza no solo consultas simples sino roles de consultoría experta.',
+  jn_2: 'Desarrollo de software', jd_2: 'La IA genera automáticamente cientos de miles de líneas de código. Incluso los mejores ingenieros delegan la mayoría del código a la IA. El rol del desarrollador pasa de "escribir código" a "dirigir la IA."',
+  jn_3: 'Legal / Derecho', jd_3: 'La IA realiza revisión de contratos, análisis de casos y redacción de escritos al nivel o por encima del abogado humano. Los bufetes ya están reduciendo contrataciones junior.',
+  jn_4: 'Finanzas / Análisis', jd_4: 'Modelado financiero, análisis de datos y redacción de informes se están automatizando. La IA genera informes de análisis de inversión en minutos.',
+  jn_5: 'Contenido / Marketing', jd_5: 'Textos publicitarios, blogs, contenido para redes sociales y traducción — el trabajo basado en escritura se automatiza a gran escala.',
+  jn_6: 'Medicina / Diagnóstico', jd_6: 'La IA ha alcanzado precisión de nivel especialista en lectura de imágenes y diagnóstico inicial. Radiología y patología son especialmente afectadas.',
+  act_h: 'Lo que puedes hacer ahora', act_lead: 'Reconocer esta brecha ya te pone un paso adelante.',
+  at_1: 'Prueba la última IA tú mismo', ad_1: 'Una suscripción de $20/mes puede cerrar una brecha tecnológica de más de 1 año.',
+  at_2: 'Aplícala al trabajo real', ad_2: 'Integra la IA en tareas diarias como escritura, análisis y programación.',
+  at_3: 'Invierte 1 hora cada día', ad_3: 'Una hora al día experimentando con herramientas de IA. En un mes, serás una persona completamente diferente.',
+  at_4: 'Desarrolla adaptabilidad', ad_4: 'La capacidad de aprender — no una habilidad específica — se convierte en tu activo más valioso.',
+  at_5: 'Comparte la información', ad_5: 'La forma más rápida de cerrar la brecha es compartir esta información.',
+  footer: 'Esta página se basa en <a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">la publicación de Matt Shumer</a>, <a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a> y los <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">benchmarks METR</a>.',
+  c_m: ' min', c_h: ' h', c_rel: 'Lanzamiento',
+  c_metr_y: 'Minutos',
+  c_f5_prev: 'Mejor gen. anterior (GPT-5.2 / Opus 4.5)',
+  c_f5_new: 'Lanzamiento 5 feb (GPT-5.3 / Opus 4.6)',
+  c_f5_y: 'Precisión (%)', c_f5_inc: 'Aumento',
+  c_tr_slow: 'Tendencia general (duplicación 197 días)',
+  c_tr_fast: 'Aceleración post-2024 (duplicación 89 días)',
+  c_tr_data: 'Datos reales METR',
+  c_tr_x: 'Fecha de lanzamiento del modelo', c_tr_y: 'Tiempo de tarea autónoma (min, escala log)',
+  c_g_actual: 'Capacidad real de IA', c_g_tech: 'Percepción industria tech',
+  c_g_public: 'Percepción público general', c_g_danger: 'Brecha (zona de peligro)',
+  c_g_y: 'Nivel (0–100)', c_g_gap: 'Brecha',
+  metr_dates: ['2023.03', '2024.10', 'Inicio 2025', 'Mediados 2025', 'Finales 2025', 'Finales 2025', '2025.12']
+};
+
+T.hi = {
+  page_title: 'Something Big Is Happening — AI धारणा अंतराल',
+  hero_date: 'फ़रवरी 2026',
+  hero_title: 'आप जो AI देखते हैं<br>और <span class="em">वास्तविक AI</span> के बीच<br>की दूरी बढ़ती जा रही है',
+  hero_lead: 'टेक उद्योग जो AI क्षमताएं रोज़ अनुभव करता है और आम जनता जो समझती है, उनके बीच का अंतर। हम वास्तविक डेटा से दिखाते हैं कि यह अंतर खतरनाक क्यों है।',
+  hero_scroll: 'नीचे स्क्रॉल करें',
+  gap_h: 'एक ही युग, बिल्कुल अलग वास्तविकताएं',
+  gap_lead: 'अधिकांश लोग AI का मुफ्त संस्करण इस्तेमाल करते हैं। Matt Shumer इसे <strong>"फ्लिप फोन से स्मार्टफोन युग का मूल्यांकन"</strong> कहते हैं। मुफ्त AI नवीनतम सशुल्क मॉडल से एक साल से अधिक पीछे है।',
+  cmp_tag_a: 'टेक उद्योग', cmp_h3_a: 'नवीनतम सशुल्क मॉडल उपयोगकर्ता',
+  cmp_q_a: '"जब आप AI से पूरा ऐप बनाने को कहते हैं, तो वह खुद टेस्ट करता है, दोहराता है और पूरा करता है। यह सिर्फ कोडिंग नहीं, निर्णय क्षमता भी दिखाता है।"',
+  cmp_tag_b: 'आम जनता', cmp_h3_b: 'मुफ्त संस्करण उपयोगकर्ता',
+  cmp_q_b: '"कभी-कभी उपयोगी जवाब देता है, लेकिन बहुत गलतियां भी करता है। क्या यह बस एक चैटबॉट नहीं है जो जटिल काम नहीं कर सकता?"',
+  meter_h: 'समूह के अनुसार AI क्षमता जागरूकता',
+  meter_cap: 'प्रत्येक समूह AI के वर्तमान स्तर को कितनी सटीकता से समझता है',
+  ml_1: 'AI शोधकर्ता', ml_2: 'टेक कर्मचारी', ml_3: 'टेक-संबंधित', ml_4: 'आम जनता',
+  speed_h: 'AI प्रगति एक घातांकीय वक्र का अनुसरण करती है — और तेज़ हो रही है',
+  speed_lead: 'METR बेंचमार्क के अनुसार, AI स्वायत्त कार्य क्षमता कुल मिलाकर हर <strong>~6.5 महीने</strong> में दोगुनी होती है, और 2024 से <strong>हर ~89 दिन (~3 महीने)</strong> में तेज़ हो गई है। 5 फरवरी को एक साथ जारी GPT-5.3-Codex और Claude Opus 4.6 इस त्वरण को और तीव्र दिखाते हैं।',
+  su_1: 'दिन', sd_1: 'क्षमता दोगुनी होने का समय<br>(कुल औसत)',
+  su_2: 'दिन', sd_2: '2024 के बाद<br>त्वरित दोगुना समय',
+  su_3: 'घंटे', sd_3: 'METR आधिकारिक सर्वोच्च<br>(GPT-5.2)',
+  sd_4: 'GPT-4 की तुलना में<br>2.7 वर्षों में क्षमता वृद्धि',
+  metr_h: 'METR बेंचमार्क: मॉडल के अनुसार स्वायत्त कार्य अवधि',
+  metr_sub: 'मानव विशेषज्ञ सहायता के बिना AI द्वारा 50% संभावना से पूरा किया जा सकने वाला कार्य समय',
+  metr_src: 'स्रोत: METR Time Horizon 1.1 (2026.01.29 अपडेट)। GPT-5.3-Codex और Opus 4.6 रिलीज़ के बाद; आधिकारिक METR मूल्यांकन अभी प्रकाशित नहीं हुआ। 89-दिन दोगुनी प्रवृत्ति लागू करने पर, नवीनतम मॉडल का समय क्षितिज 10+ घंटे अनुमानित है।',
+  feb5_h: 'एक ही दिन दो मॉडल लॉन्च हुए',
+  feb5_p: 'OpenAI का GPT-5.3-Codex और Anthropic का Claude Opus 4.6 एक ही दिन जारी किए गए। GPT-5.3-Codex को "खुद को बनाने में योगदान देने वाला पहला मॉडल" घोषित किया गया, जबकि Opus 4.6 ने ARC-AGI-2 पर अपने पूर्ववर्ती के स्कोर को लगभग दोगुना कर दिया।',
+  bench_th: 'बेंचमार्क',
+  feb5_cap: 'स्रोत: OpenAI, Anthropic आधिकारिक घोषणाएं (2026.02.05)। GPT-5.3-Codex: 25% तेज़ + 400K संदर्भ। Opus 4.6: 1M संदर्भ + अनुकूली सोच।',
+  feb5c_h: '5 फरवरी मॉडल vs पिछली पीढ़ी — प्रमुख बेंचमार्क तुलना',
+  feb5c_sub: 'समान बेंचमार्क पर पिछली पीढ़ी से कितना सुधार हुआ',
+  trend_h: 'AI स्वायत्त कार्य समय में घातांकीय वृद्धि',
+  trend_sub: 'मॉडल रिलीज़ तिथि के अनुसार 50% समय क्षितिज परिवर्तन (लॉग स्केल)। 2024 के बाद वक्र तेज़ हुआ है।',
+  trend_src: 'स्रोत: METR Time Horizon 1.1 / Epoch AI। धूसर बिंदीदार रेखा: समग्र प्रवृत्ति (197-दिन दोगुना)। लाल बिंदीदार रेखा: 2024 के बाद त्वरण (89-दिन दोगुना)।',
+  tl_h: '4 वर्षों में क्या हुआ',
+  tl_lead: 'बुनियादी गणित भी न कर पाने वाली AI से लेकर विशेषज्ञ-स्तरीय जटिल कार्यों के स्वायत्त निष्पादन तक।',
+  ty_1: '2022', tt_1: 'ChatGPT लॉन्च। दुनिया चकित, लेकिन बुनियादी गणित में अक्सर गलती। स्वायत्त कार्य समय: मापने योग्य नहीं।',
+  ty_2: '2023. 3', tt_2: 'GPT-4 लॉन्च। US बार परीक्षा पास। METR स्वायत्त कार्य समय: ~3.5 मिनट।',
+  ty_3: '2024. 10', tt_3: 'Claude 3.5 Sonnet। पूर्ण सॉफ्टवेयर लिख सकता है। स्वायत्त कार्य समय ~20 मिनट तक बढ़ा।',
+  ty_4: 'H1 2025', tt_4: 'Claude 3.7 Sonnet — ~1 घंटा। O3 — ~1.6 घंटे। शीर्ष इंजीनियर अधिकांश कोडिंग AI को सौंपने लगे।',
+  ty_5: 'H2 2025', tt_5: 'Gemini 3 Pro — ~4 घंटे। Claude Opus 4.5 — ~5.3 घंटे। MathArena Apex: 1% से 23%, 20 गुना छलांग।',
+  ty_6: '2025. 12', tt_6: 'GPT-5.2 — METR पर ~6.6 घंटे (394 मिनट)। सर्वकालिक रिकॉर्ड। "पहले का सब कुछ किसी और युग जैसा लगता है।"',
+  ty_7: '2026. 2. 5 — वर्तमान', tt_7: 'एक ही दिन: GPT-5.3-Codex और Claude Opus 4.6 एक साथ लॉन्च। GPT-5.3-Codex Terminal-Bench पर +13.3%p कूदा, "खुद को बनाने में योगदान देने वाला पहला मॉडल" घोषित। Opus 4.6 ARC-AGI-2 पर 37.6% से 68.8% तक एक पीढ़ी में। 1M टोकन संदर्भ। दोगुना समय 89 दिन पुष्ट।',
+  int_h: 'स्वयं देखें', sl_h: 'AI क्षमता टाइम मशीन',
+  sl_desc: 'प्रत्येक समय बिंदु पर AI क्षमता स्तर देखने के लिए स्लाइडर हिलाएं।',
+  cap_2020: 'GPT-3 लॉन्च। विश्वसनीय वाक्य बनाता है लेकिन तथ्य अविश्वसनीय हैं। अधिकांश लोग AI चैटबॉट के अस्तित्व से भी अनजान।',
+  cap_2021: 'GitHub Copilot प्रीव्यू। कोड ऑटोकम्पलीट संभव लेकिन व्यापक रूप से खिलौना माना गया।',
+  cap_2022: 'ChatGPT आया। बुनियादी गणित में अक्सर गलती, लेकिन दुनिया को संवादात्मक AI की क्षमता दिखाई।',
+  cap_2023: 'GPT-4 ने बार परीक्षा पास की। METR स्वायत्त कार्य समय: 3.5 मिनट। जनता अभी भी AI को "कभी-कभी उपयोगी चैटबॉट" मानती है।',
+  cap_2024: 'Claude 3.5 Sonnet — स्वायत्त कार्य ~20 मिनट। पूर्ण सॉफ्टवेयर लिख सकता है। टेक उद्योग गंभीर होने लगा।',
+  cap_2025: 'Claude 3.7 Sonnet 1 घंटा, O3 1.6 घंटे, Gemini 3 Pro 4 घंटे, Claude Opus 4.5 5.3 घंटे। शीर्ष इंजीनियर अधिकांश कोडिंग AI को सौंपते हैं।',
+  cap_2026: '5 फरवरी: GPT-5.3-Codex और Claude Opus 4.6 एक ही दिन लॉन्च। GPT-5.3 "खुद को बनाने में योगदान देने वाला पहला मॉडल।" Opus 4.6 ARC-AGI-2 पर 37.6% से 68.8%। दोगुना समय 89 दिन। फिर भी अधिकांश लोग 2023 स्तर का मुफ्त AI इस्तेमाल कर रहे हैं।',
+  cap_2027: 'अगर 89-दिन दोगुनी प्रवृत्ति जारी रहे? AI कई दिनों के जटिल प्रोजेक्ट पूरी तरह स्वायत्त रूप से पूरा करेगा। METR का अनुमान "एक दशक में महीने भर के स्वायत्त प्रोजेक्ट।" अधिकांश ज्ञान कार्य मौलिक रूप से पुनर्परिभाषित हो सकता है।',
+  gc_h: 'बढ़ता अंतराल खतरनाक क्यों है',
+  gc_lead: 'वास्तविक AI क्षमता घातांकीय रूप से बढ़ रही है, लेकिन सार्वजनिक धारणा मुश्किल से हिलती है। समाज उन झटकों का सामना करता है जिनके लिए वह तैयार नहीं है।',
+  gc_ch: 'वास्तविक AI क्षमता vs. सार्वजनिक धारणा',
+  gc_cs: 'लाल क्षेत्र जितना चौड़ा, सामाजिक झटका उतना बड़ा',
+  co_label: 'चेतावनी',
+  co_text: '"अगले 1-5 वर्षों में, 50% प्रवेश-स्तरीय कार्यालय नौकरियां समाप्त हो सकती हैं। AI द्वारा वर्तमान पीढ़ी से मौलिक रूप से कहीं बेहतर मॉडल बनाने में केवल 1-2 वर्ष शेष हैं।"',
+  co_attr: '— Dario Amodei, Anthropic CEO, 2025',
+  jobs_h: 'पहले से खतरे में नौकरियां', jobs_hint: 'विवरण देखने के लिए आइटम पर क्लिक करें।',
+  jn_1: 'ग्राहक सेवा', jd_1: 'जटिल बहु-चरणीय समस्या समाधान अब संभव होने से, AI न केवल सरल पूछताछ बल्कि विशेषज्ञ परामर्श भूमिकाएं भी ले रहा है।',
+  jn_2: 'सॉफ्टवेयर विकास', jd_2: 'AI लाखों लाइन कोड स्वचालित रूप से उत्पन्न करता है। शीर्ष इंजीनियर भी अधिकांश कोडिंग AI को सौंपते हैं। डेवलपर की भूमिका "कोड लिखना" से "AI को निर्देशित करना" में बदल रही है।',
+  jn_3: 'कानूनी / विधि', jd_3: 'AI अनुबंध समीक्षा, मामला विश्लेषण और ब्रीफ ड्राफ्टिंग मानव वकील के स्तर पर या उससे ऊपर करता है। लॉ फर्म पहले से जूनियर भर्ती कम कर रहे हैं।',
+  jn_4: 'वित्त / विश्लेषण', jd_4: 'वित्तीय मॉडलिंग, डेटा विश्लेषण और रिपोर्ट लेखन स्वचालित हो रहे हैं। AI मिनटों में निवेश विश्लेषण रिपोर्ट तैयार करता है।',
+  jn_5: 'सामग्री / मार्केटिंग', jd_5: 'विज्ञापन कॉपी, ब्लॉग पोस्ट, सोशल मीडिया सामग्री और अनुवाद — लेखन-आधारित कार्य बड़े पैमाने पर स्वचालित हो रहे हैं।',
+  jn_6: 'चिकित्सा / निदान', jd_6: 'AI ने छवि पठन और प्रारंभिक निदान में विशेषज्ञ-स्तरीय सटीकता हासिल की है। रेडियोलॉजी और पैथोलॉजी विशेष रूप से प्रभावित।',
+  act_h: 'अभी आप क्या कर सकते हैं', act_lead: 'इस अंतराल को पहचानना ही आपको एक कदम आगे रखता है।',
+  at_1: 'नवीनतम AI स्वयं आज़माएं', ad_1: '$20/महीने की सदस्यता 1+ वर्ष की तकनीकी खाई को पाट सकती है।',
+  at_2: 'वास्तविक काम में लागू करें', ad_2: 'लेखन, विश्लेषण और कोडिंग जैसे दैनिक कार्यों में AI को एकीकृत करें।',
+  at_3: 'हर दिन 1 घंटा लगाएं', ad_3: 'AI टूल्स के साथ प्रयोग में प्रतिदिन एक घंटा। एक महीने में आप पूरी तरह बदल जाएंगे।',
+  at_4: 'अनुकूलनशीलता बनाएं', ad_4: 'सीखने की क्षमता — कोई विशिष्ट कौशल नहीं — आपकी सबसे मूल्यवान संपत्ति बनती है।',
+  at_5: 'दूसरों को बताएं', ad_5: 'अंतराल को कम करने का सबसे तेज़ तरीका इस जानकारी को साझा करना है।',
+  footer: 'यह पृष्ठ <a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">Matt Shumer की पोस्ट</a>, <a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a> और <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR बेंचमार्क</a> पर आधारित है।',
+  c_m: ' मिनट', c_h: ' घंटे', c_rel: 'रिलीज़',
+  c_metr_y: 'मिनट',
+  c_f5_prev: 'पिछली पीढ़ी सर्वश्रेष्ठ (GPT-5.2 / Opus 4.5)',
+  c_f5_new: '5 फरवरी रिलीज़ (GPT-5.3 / Opus 4.6)',
+  c_f5_y: 'सटीकता (%)', c_f5_inc: 'वृद्धि',
+  c_tr_slow: 'समग्र प्रवृत्ति (197-दिन दोगुना)',
+  c_tr_fast: '2024 के बाद त्वरण (89-दिन दोगुना)',
+  c_tr_data: 'METR वास्तविक डेटा',
+  c_tr_x: 'मॉडल रिलीज़ तिथि', c_tr_y: 'स्वायत्त कार्य समय (मिनट, लॉग स्केल)',
+  c_g_actual: 'वास्तविक AI क्षमता', c_g_tech: 'टेक उद्योग धारणा',
+  c_g_public: 'आम जनता धारणा', c_g_danger: 'अंतराल (खतरा क्षेत्र)',
+  c_g_y: 'स्तर (0–100)', c_g_gap: 'अंतराल',
+  metr_dates: ['2023.03', '2024.10', '2025 प्रारंभ', '2025 मध्य', '2025 अंत', '2025 अंत', '2025.12']
+};
+
+// ── Chart creation ──
+const gridColor = '#F0F1F3';
+const metrModels = ['GPT-4','Claude 3.5\nSonnet','Claude 3.7\nSonnet','O3','Gemini 3\nPro','Claude\nOpus 4.5','GPT-5.2'];
+const metrMinutes = [3.5, 19.8, 59.8, 94.0, 236.7, 320.4, 394.4];
+const feb5Benchmarks = ['Terminal-Bench\n2.0','OSWorld','ARC-AGI-2','BrowseComp','HLE\n(w/ tools)','GPQA\nDiamond'];
+const prevGen = [64.0, 38.2, 37.6, 67.8, 43.4, 87.0];
+const newGen = [77.3, 72.7, 68.8, 84.0, 53.1, 91.3];
+const trendData = [
+  {x:2023.25,y:3.5,label:'GPT-4'},{x:2024.42,y:6.4,label:'GPT-4o'},
+  {x:2024.50,y:10.8,label:'Claude 3.5 Sonnet (Jun)'},{x:2024.75,y:19.4,label:'o1 Preview'},
+  {x:2024.83,y:19.8,label:'Claude 3.5 Sonnet (Oct)'},{x:2024.92,y:37.9,label:'o1 (Elicited)'},
+  {x:2025.17,y:59.8,label:'Claude 3.7 Sonnet'},{x:2025.33,y:120.7,label:'O3'},
+  {x:2025.42,y:101.2,label:'Claude 4 Opus'},{x:2025.83,y:236.7,label:'Gemini 3 Pro'},
+  {x:2025.88,y:320.4,label:'Claude Opus 4.5'},{x:2025.95,y:394.4,label:'GPT-5.2'},
+];
+
+function createCharts() {
+  const t = T[currentLang];
+  Object.values(charts).forEach(c => c.destroy());
+
+  // METR bar chart
+  charts.metr = new Chart(document.getElementById('metrChart'), {
+    type: 'bar',
+    data: {
+      labels: metrModels,
+      datasets: [{
+        label: '50% Time Horizon',
+        data: metrMinutes,
+        backgroundColor: metrMinutes.map(v => v<60?'#D1D3D8':v<120?'#AEB1B9':v<300?'#55585D':'#191A1B'),
+        borderRadius: 4, borderSkipped: false, maxBarThickness: 48,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor:'#191A1B',titleColor:'#fff',bodyColor:'#fff',padding:10,cornerRadius:6,
+          titleFont:{weight:'600',size:12},
+          callbacks: {
+            title: items => items[0].label.replace('\n',' '),
+            label: ctx => {
+              const m = ctx.parsed.y;
+              const dateStr = t.metr_dates[ctx.dataIndex];
+              const timeStr = m<60 ? m+t.c_m : (m/60).toFixed(1)+t.c_h+' ('+Math.round(m)+t.c_m+')';
+              return [timeStr, t.c_rel+': '+dateStr];
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          title:{display:true,text:t.c_metr_y,color:'#AEB1B9',padding:8,font:{size:10}},
+          grid:{color:gridColor},
+          ticks:{callback:v=>{if(v===0)return'0';if(v<60)return v+t.c_m;return(v/60).toFixed(0)+t.c_h;}}
+        },
+        x: {grid:{display:false},ticks:{maxRotation:0,font:{size:10}}}
+      },
+      animation:{duration:800,easing:'easeOutQuart'}
+    }
   });
 
-  // ── Job card toggle ──
-  document.querySelectorAll('.job-item').forEach(c => {
-    c.addEventListener('click', () => c.classList.toggle('open'));
+  // Feb 5 comparison chart
+  charts.feb5 = new Chart(document.getElementById('feb5Chart'), {
+    type: 'bar',
+    data: {
+      labels: feb5Benchmarks,
+      datasets: [
+        {label:t.c_f5_prev,data:prevGen,backgroundColor:'#D1D3D8',borderRadius:4,borderSkipped:false,maxBarThickness:32},
+        {label:t.c_f5_new,data:newGen,backgroundColor:'#191A1B',borderRadius:4,borderSkipped:false,maxBarThickness:32}
+      ]
+    },
+    options: {
+      responsive:true,maintainAspectRatio:false,
+      plugins: {
+        legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyleWidth:10,font:{size:11}}},
+        tooltip: {
+          backgroundColor:'#191A1B',titleColor:'#fff',bodyColor:'#fff',padding:10,cornerRadius:6,
+          callbacks: {
+            title: items => items[0].label.replace('\n',' '),
+            afterBody: items => {const i=items[0].dataIndex;const diff=newGen[i]-prevGen[i];return t.c_f5_inc+': +'+diff.toFixed(1)+'%p';}
+          }
+        }
+      },
+      scales: {
+        y:{min:0,max:100,title:{display:true,text:t.c_f5_y,color:'#AEB1B9',padding:8,font:{size:10}},grid:{color:gridColor},ticks:{callback:v=>v+'%'}},
+        x:{grid:{display:false},ticks:{maxRotation:0,font:{size:10}}}
+      },
+      animation:{duration:800,easing:'easeOutQuart'}
+    }
   });
 
-  // ── Slider ──
-  const caps = {
-    2020: { text: "GPT-3 출시. 그럴듯한 문장을 생성하지만 사실 관계가 불안정합니다. 대부분의 사람들은 AI 챗봇의 존재조차 모릅니다." },
-    2021: { text: "GitHub Copilot 프리뷰. 코드 자동완성이 가능해지지만, 장난감 수준이라는 평가가 지배적입니다." },
-    2022: { text: "ChatGPT 등장. 기본 산술도 자주 틀리지만, 대화형 AI의 가능성을 세상에 알렸습니다." },
-    2023: { text: "GPT-4가 변호사 시험 합격. METR 기준 자율 작업 시간 3.5분. 대중은 여전히 '가끔 쓸만한 챗봇' 정도로 봅니다." },
-    2024: { text: "Claude 3.5 Sonnet — 자율 작업 약 20분. 완전한 소프트웨어 작성, 대학원 수준 과학 설명 가능. 테크 업계가 심각해지기 시작합니다." },
-    2025: { text: "Claude 3.7 Sonnet 1시간, O3 1.6시간, Gemini 3 Pro 4시간, Claude Opus 4.5 5.3시간. 최고 엔지니어들이 코딩의 대부분을 AI에 위임합니다." },
-    2026: { text: "2월 5일, GPT-5.3-Codex와 Claude Opus 4.6이 같은 날 출시. GPT-5.3은 '자기 자신을 만드는 데 기여한 최초의 모델'. Opus 4.6은 ARC-AGI-2에서 37.6%→68.8%로 도약. 능력 더블링 주기가 89일로 단축. 그런데 대부분의 사람들은 아직 2023년 수준의 무료 AI를 쓰고 있습니다." },
-    2027: { text: "현재 89일 더블링 추세가 계속된다면? AI가 며칠짜리 복잡한 프로젝트를 완전 자율 수행. METR는 '10년 내 월 단위 프로젝트 자율 수행 가능'이라 전망합니다. 대부분의 지식노동이 근본적으로 재정의될 수 있습니다." }
-  };
+  // Trend scatter chart
+  const t0=2023.25,v0=3.5,doublingAll=197/365;
+  const trendLineSlow=[];
+  for(let tx=2023;tx<=2026.5;tx+=0.05)trendLineSlow.push({x:tx,y:v0*Math.pow(2,(tx-t0)/doublingAll)});
+  const t1=2024.42,v1=6.4,doublingFast=89/365;
+  const trendLineFast=[];
+  for(let tx=2024.3;tx<=2026.5;tx+=0.05)trendLineFast.push({x:tx,y:v1*Math.pow(2,(tx-t1)/doublingFast)});
 
-  const slider = document.getElementById('yearSlider');
-  const yearEl = document.getElementById('sliderYear');
-  const textEl = document.getElementById('sliderText');
+  charts.trend = new Chart(document.getElementById('trendChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {label:t.c_tr_slow,data:trendLineSlow,showLine:true,borderColor:'#D1D3D8',borderWidth:1.5,borderDash:[6,4],pointRadius:0,fill:false,order:3},
+        {label:t.c_tr_fast,data:trendLineFast,showLine:true,borderColor:'rgba(224,40,47,0.5)',borderWidth:1.5,borderDash:[4,3],pointRadius:0,fill:false,order:2},
+        {label:t.c_tr_data,data:trendData,pointRadius:4,pointBackgroundColor:'#191A1B',pointBorderColor:'#fff',pointBorderWidth:2,pointHoverRadius:6,showLine:false,fill:false,order:1}
+      ]
+    },
+    options: {
+      responsive:true,maintainAspectRatio:false,
+      plugins: {
+        legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyleWidth:10,font:{size:10}}},
+        tooltip: {
+          backgroundColor:'#191A1B',titleColor:'#fff',bodyColor:'#fff',padding:10,cornerRadius:6,
+          filter:item=>item.datasetIndex===2,
+          callbacks: {
+            title: items=>{const d=trendData[items[0].dataIndex];return d?d.label:'';},
+            label: ctx=>{const m=ctx.parsed.y;return m<60?m.toFixed(1)+t.c_m:(m/60).toFixed(1)+t.c_h+' ('+Math.round(m)+t.c_m+')';}
+          }
+        }
+      },
+      scales: {
+        x:{type:'linear',min:2023,max:2026.5,title:{display:true,text:t.c_tr_x,color:'#AEB1B9',padding:8,font:{size:10}},grid:{color:gridColor},ticks:{stepSize:0.5,callback:v=>v===Math.floor(v)?v.toString():''}},
+        y:{type:'logarithmic',min:1,max:2000,title:{display:true,text:t.c_tr_y,color:'#AEB1B9',padding:8,font:{size:10}},grid:{color:gridColor},ticks:{callback:v=>{if([1,5,10,30,60,120,300,600,1200].includes(v))return v<60?v+t.c_m:(v/60).toFixed(0)+t.c_h;return'';}}}
+      },
+      animation:{duration:1000,easing:'easeOutQuart'}
+    }
+  });
 
-  function updateSlider() {
-    const y = slider.value;
-    yearEl.textContent = y == 2027 ? '2027?' : y;
-    if (+y >= 2026) yearEl.style.color = 'var(--red)';
-    else yearEl.style.color = 'var(--text-primary)';
-    textEl.textContent = caps[y].text;
-  }
-  slider.addEventListener('input', updateSlider);
+  // Gap line chart
+  const actualData=[5,8,15,30,50,75,92],pubData=[4,5,10,18,22,25,28];
+  charts.gap = new Chart(document.getElementById('gapChart'), {
+    type: 'line',
+    data: {
+      labels: ['2020','2021','2022','2023','2024','2025','2026'],
+      datasets: [
+        {label:t.c_g_actual,data:actualData,borderColor:'#191A1B',borderWidth:2,pointRadius:4,pointBackgroundColor:'#191A1B',pointBorderColor:'#fff',pointBorderWidth:2,tension:0.35,fill:false},
+        {label:t.c_g_tech,data:[5,7,13,26,42,65,82],borderColor:'#878A93',borderWidth:1.5,borderDash:[5,3],pointRadius:3,pointBackgroundColor:'#878A93',tension:0.35,fill:false},
+        {label:t.c_g_public,data:pubData,borderColor:'#D97706',borderWidth:2,pointRadius:4,pointBackgroundColor:'#D97706',pointBorderColor:'#fff',pointBorderWidth:2,tension:0.35,fill:false},
+        {label:t.c_g_danger,data:[1,3,5,12,28,50,64],borderColor:'transparent',backgroundColor:'rgba(224,40,47,0.07)',borderWidth:0,pointRadius:0,tension:0.35,fill:true}
+      ]
+    },
+    options: {
+      responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins: {
+        legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyleWidth:10,font:{size:11},filter:item=>item.text!==t.c_g_danger}},
+        tooltip: {
+          backgroundColor:'#191A1B',titleColor:'#fff',bodyColor:'#fff',padding:10,cornerRadius:6,
+          filter:item=>item.datasetIndex!==3,
+          callbacks:{afterBody:items=>{const i=items[0].dataIndex;return t.c_g_gap+': '+(actualData[i]-pubData[i])+'pt';}}
+        }
+      },
+      scales: {
+        y:{min:0,max:100,title:{display:true,text:t.c_g_y,color:'#AEB1B9',padding:8,font:{size:10}},grid:{color:gridColor}},
+        x:{grid:{display:false}}
+      },
+      animation:{duration:1000,easing:'easeOutQuart'}
+    }
+  });
+}
+
+// ── Slider ──
+function updateSlider() {
+  const t = T[currentLang];
+  const y = slider.value;
+  yearEl.textContent = y == 2027 ? '2027?' : y;
+  yearEl.style.color = +y >= 2026 ? 'var(--red)' : 'var(--text-primary)';
+  textEl.textContent = t['cap_' + y];
+}
+
+// ── Language switch ──
+function setLang(lang) {
+  currentLang = lang;
+  const t = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] != null) el.innerHTML = t[key];
+  });
+  document.documentElement.lang = lang;
+  document.title = t.page_title;
+  document.getElementById('langCode').textContent = {en:'EN',ko:'KO',zh:'ZH',es:'ES',hi:'HI'}[lang];
+  document.querySelectorAll('.lang-option').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+  createCharts();
   updateSlider();
+  localStorage.setItem('lang', lang);
+}
 
-  // ── Chart globals ──
+// ── Init ──
+document.addEventListener('DOMContentLoaded', () => {
   Chart.defaults.color = '#878A93';
   Chart.defaults.borderColor = '#E9EAEE';
   Chart.defaults.font.family = "'Pretendard Variable', Pretendard, -apple-system, sans-serif";
   Chart.defaults.font.size = 11;
 
-  const gridColor = '#F0F1F3';
+  // Reveal on scroll
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.meter-fill').forEach(f => { f.style.width = f.dataset.width + '%'; });
+      e.target.querySelectorAll('.job-item').forEach(c => { c.querySelector('.job-bar-fill').style.width = c.dataset.risk + '%'; });
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  // ── METR Chart: 실측 모델별 데이터 ──
-  const metrModels = [
-    'GPT-4',
-    'Claude 3.5\nSonnet',
-    'Claude 3.7\nSonnet',
-    'O3',
-    'Gemini 3\nPro',
-    'Claude\nOpus 4.5',
-    'GPT-5.2'
-  ];
-  const metrMinutes = [3.5, 19.8, 59.8, 94.0, 236.7, 320.4, 394.4];
-  const metrDates = ['2023.03', '2024.10', '2025 초', '2025 중', '2025 말', '2025 말', '2025.12'];
+  // Timeline items
+  const tlObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.tl-item').forEach((el, i) => { el.style.transitionDelay = (i * 80) + 'ms'; tlObs.observe(el); });
 
-  new Chart(document.getElementById('metrChart'), {
-    type: 'bar',
-    data: {
-      labels: metrModels,
-      datasets: [{
-        label: '50% Time Horizon (분)',
-        data: metrMinutes,
-        backgroundColor: metrMinutes.map(v =>
-          v < 60 ? '#D1D3D8' :
-          v < 120 ? '#AEB1B9' :
-          v < 300 ? '#55585D' : '#191A1B'
-        ),
-        borderRadius: 4,
-        borderSkipped: false,
-        maxBarThickness: 48,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#191A1B',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 10,
-          cornerRadius: 6,
-          titleFont: { weight: '600', size: 12 },
-          callbacks: {
-            title: (items) => items[0].label.replace('\n', ' '),
-            label: (ctx) => {
-              const m = ctx.parsed.y;
-              const dateStr = metrDates[ctx.dataIndex];
-              const timeStr = m < 60 ? `${m}분` : `${(m/60).toFixed(1)}시간 (${Math.round(m)}분)`;
-              return [`${timeStr}`, `출시: ${dateStr}`];
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          title: { display: true, text: '분 (minutes)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
-          grid: { color: gridColor },
-          ticks: {
-            callback: v => {
-              if (v === 0) return '0';
-              if (v < 60) return v + '분';
-              return (v / 60).toFixed(0) + '시간';
-            }
-          }
-        },
-        x: {
-          grid: { display: false },
-          ticks: {
-            maxRotation: 0,
-            font: { size: 10 }
-          }
-        }
-      },
-      animation: { duration: 800, easing: 'easeOutQuart' }
-    }
+  // Job card toggle
+  document.querySelectorAll('.job-item').forEach(c => { c.addEventListener('click', () => c.classList.toggle('open')); });
+
+  // Slider
+  slider = document.getElementById('yearSlider');
+  yearEl = document.getElementById('sliderYear');
+  textEl = document.getElementById('sliderText');
+  slider.addEventListener('input', updateSlider);
+
+  // Language switcher
+  const langSwitch = document.getElementById('langSwitch');
+  document.getElementById('langBtn').addEventListener('click', e => { e.stopPropagation(); langSwitch.classList.toggle('open'); });
+  document.querySelectorAll('.lang-option').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); setLang(btn.dataset.lang); langSwitch.classList.remove('open'); });
   });
+  document.addEventListener('click', () => langSwitch.classList.remove('open'));
 
-  // ── Feb 5 Benchmark Comparison Chart ──
-  const feb5Benchmarks = ['Terminal-Bench\n2.0', 'OSWorld', 'ARC-AGI-2', 'BrowseComp', 'HLE\n(w/ tools)', 'GPQA\nDiamond'];
-  const prevGen = [64.0, 38.2, 37.6, 67.8, 43.4, 87.0]; // GPT-5.2 or Opus 4.5 (best prev)
-  const newGen =  [77.3, 72.7, 68.8, 84.0, 53.1, 91.3]; // GPT-5.3 or Opus 4.6 (best new)
-
-  new Chart(document.getElementById('feb5Chart'), {
-    type: 'bar',
-    data: {
-      labels: feb5Benchmarks,
-      datasets: [
-        {
-          label: '이전 세대 최고 (GPT-5.2 / Opus 4.5)',
-          data: prevGen,
-          backgroundColor: '#D1D3D8',
-          borderRadius: 4,
-          borderSkipped: false,
-          maxBarThickness: 32,
-        },
-        {
-          label: '2월 5일 출시 (GPT-5.3 / Opus 4.6)',
-          data: newGen,
-          backgroundColor: '#191A1B',
-          borderRadius: 4,
-          borderSkipped: false,
-          maxBarThickness: 32,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { padding: 16, usePointStyle: true, pointStyleWidth: 10, font: { size: 11 } }
-        },
-        tooltip: {
-          backgroundColor: '#191A1B',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 10,
-          cornerRadius: 6,
-          callbacks: {
-            title: (items) => items[0].label.replace('\n', ' '),
-            afterBody: (items) => {
-              const i = items[0].dataIndex;
-              const diff = newGen[i] - prevGen[i];
-              return `상승폭: +${diff.toFixed(1)}%p`;
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          min: 0,
-          max: 100,
-          title: { display: true, text: '정확도 (%)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
-          grid: { color: gridColor },
-          ticks: { callback: v => v + '%' }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { maxRotation: 0, font: { size: 10 } }
-        }
-      },
-      animation: { duration: 800, easing: 'easeOutQuart' }
-    }
-  });
-
-  // ── Trend Chart: 시계열 (로그 스케일) ──
-  const trendData = [
-    { x: 2023.25, y: 3.5, label: 'GPT-4' },
-    { x: 2024.42, y: 6.4, label: 'GPT-4o' },
-    { x: 2024.50, y: 10.8, label: 'Claude 3.5 Sonnet (Jun)' },
-    { x: 2024.75, y: 19.4, label: 'o1 Preview' },
-    { x: 2024.83, y: 19.8, label: 'Claude 3.5 Sonnet (Oct)' },
-    { x: 2024.92, y: 37.9, label: 'o1 (Elicited)' },
-    { x: 2025.17, y: 59.8, label: 'Claude 3.7 Sonnet' },
-    { x: 2025.33, y: 120.7, label: 'O3' },
-    { x: 2025.42, y: 101.2, label: 'Claude 4 Opus' },
-    { x: 2025.83, y: 236.7, label: 'Gemini 3 Pro' },
-    { x: 2025.88, y: 320.4, label: 'Claude Opus 4.5' },
-    { x: 2025.95, y: 394.4, label: 'GPT-5.2' },
-  ];
-
-  // 추세선 1: 전체 기간 (197일 = ~0.539년 더블링)
-  const trendLineSlow = [];
-  const t0 = 2023.25, v0 = 3.5;
-  const doublingAll = 197 / 365;
-  for (let t = 2023; t <= 2026.5; t += 0.05) {
-    trendLineSlow.push({ x: t, y: v0 * Math.pow(2, (t - t0) / doublingAll) });
-  }
-
-  // 추세선 2: 2024년 이후 가속 (89일 = ~0.244년 더블링)
-  const trendLineFast = [];
-  const t1 = 2024.42, v1 = 6.4;
-  const doublingFast = 89 / 365;
-  for (let t = 2024.3; t <= 2026.5; t += 0.05) {
-    trendLineFast.push({ x: t, y: v1 * Math.pow(2, (t - t1) / doublingFast) });
-  }
-
-  new Chart(document.getElementById('trendChart'), {
-    type: 'scatter',
-    data: {
-      datasets: [
-        {
-          label: '전체 기간 추세 (197일 더블링)',
-          data: trendLineSlow,
-          showLine: true,
-          borderColor: '#D1D3D8',
-          borderWidth: 1.5,
-          borderDash: [6, 4],
-          pointRadius: 0,
-          fill: false,
-          order: 3,
-        },
-        {
-          label: '2024년 이후 가속 추세 (89일 더블링)',
-          data: trendLineFast,
-          showLine: true,
-          borderColor: 'rgba(224, 40, 47, 0.5)',
-          borderWidth: 1.5,
-          borderDash: [4, 3],
-          pointRadius: 0,
-          fill: false,
-          order: 2,
-        },
-        {
-          label: 'METR 실측 데이터',
-          data: trendData,
-          pointRadius: 4,
-          pointBackgroundColor: '#191A1B',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointHoverRadius: 6,
-          showLine: false,
-          fill: false,
-          order: 1,
-        },
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { padding: 16, usePointStyle: true, pointStyleWidth: 10, font: { size: 10 } }
-        },
-        tooltip: {
-          backgroundColor: '#191A1B',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 10,
-          cornerRadius: 6,
-          filter: (item) => item.datasetIndex === 2,
-          callbacks: {
-            title: (items) => {
-              const d = trendData[items[0].dataIndex];
-              return d ? d.label : '';
-            },
-            label: (ctx) => {
-              const m = ctx.parsed.y;
-              return m < 60 ? `${m.toFixed(1)}분` : `${(m/60).toFixed(1)}시간 (${Math.round(m)}분)`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          type: 'linear',
-          min: 2023,
-          max: 2026.5,
-          title: { display: true, text: '모델 출시 시점', color: '#AEB1B9', padding: 8, font: { size: 10 } },
-          grid: { color: gridColor },
-          ticks: {
-            stepSize: 0.5,
-            callback: v => {
-              if (v === Math.floor(v)) return v.toString();
-              return '';
-            }
-          }
-        },
-        y: {
-          type: 'logarithmic',
-          min: 1,
-          max: 2000,
-          title: { display: true, text: '자율 작업 시간 (분, log scale)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
-          grid: { color: gridColor },
-          ticks: {
-            callback: v => {
-              if ([1, 5, 10, 30, 60, 120, 300, 600, 1200].includes(v)) {
-                return v < 60 ? v + '분' : (v/60).toFixed(0) + '시간';
-              }
-              return '';
-            }
-          }
-        }
-      },
-      animation: { duration: 1000, easing: 'easeOutQuart' }
-    }
-  });
-
-  // ── Gap Chart ──
-  // 보다 현실적인 수치: AI 능력은 METR 기반 지수 성장, 대중 인식은 완만한 선형
-  new Chart(document.getElementById('gapChart'), {
-    type: 'line',
-    data: {
-      labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'],
-      datasets: [
-        {
-          label: 'AI 실제 능력',
-          data: [5, 8, 15, 30, 50, 75, 92],
-          borderColor: '#191A1B',
-          borderWidth: 2,
-          pointRadius: 4,
-          pointBackgroundColor: '#191A1B',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          tension: 0.35,
-          fill: false,
-        },
-        {
-          label: '테크 업계 인식',
-          data: [5, 7, 13, 26, 42, 65, 82],
-          borderColor: '#878A93',
-          borderWidth: 1.5,
-          borderDash: [5, 3],
-          pointRadius: 3,
-          pointBackgroundColor: '#878A93',
-          tension: 0.35,
-          fill: false,
-        },
-        {
-          label: '일반 대중 인식',
-          data: [4, 5, 10, 18, 22, 25, 28],
-          borderColor: '#D97706',
-          borderWidth: 2,
-          pointRadius: 4,
-          pointBackgroundColor: '#D97706',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          tension: 0.35,
-          fill: false,
-        },
-        {
-          label: '격차 (위험 영역)',
-          data: [1, 3, 5, 12, 28, 50, 64],
-          borderColor: 'transparent',
-          backgroundColor: 'rgba(224, 40, 47, 0.07)',
-          borderWidth: 0,
-          pointRadius: 0,
-          tension: 0.35,
-          fill: true,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            padding: 16,
-            usePointStyle: true,
-            pointStyleWidth: 10,
-            font: { size: 11 },
-            filter: (item) => item.text !== '격차 (위험 영역)',
-          }
-        },
-        tooltip: {
-          backgroundColor: '#191A1B',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 10,
-          cornerRadius: 6,
-          filter: (item) => item.datasetIndex !== 3,
-          callbacks: {
-            afterBody: (items) => {
-              const i = items[0].dataIndex;
-              const actual = [5,8,15,30,50,75,92];
-              const pub = [4,5,10,18,22,25,28];
-              return `격차: ${actual[i] - pub[i]}pt`;
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          min: 0,
-          max: 100,
-          title: { display: true, text: '수준 (0–100)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
-          grid: { color: gridColor }
-        },
-        x: { grid: { display: false } }
-      },
-      animation: { duration: 1000, easing: 'easeOutQuart' }
-    }
-  });
+  // Detect language
+  const stored = localStorage.getItem('lang');
+  const browserLang = (navigator.language || '').slice(0, 2);
+  const lang = stored || (['ko','zh','es','hi'].includes(browserLang) ? browserLang : 'en');
+  setLang(lang);
 });
 </script>
 

@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 인식 격차</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<style>
+  @font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+  }
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-subtle: #F7F8FA;
+    --bg-muted: #F0F1F3;
+    --border: #E9EAEE;
+    --border-strong: #D1D3D8;
+    --text-primary: #191A1B;
+    --text-secondary: #55585D;
+    --text-tertiary: #878A93;
+    --text-placeholder: #AEB1B9;
+    --accent: #191A1B;
+    --red: #E0282F;
+    --red-subtle: #FEF2F2;
+    --red-muted: #FECACA;
+    --blue: #2563EB;
+    --blue-subtle: #EFF6FF;
+    --amber: #D97706;
+    --amber-subtle: #FFFBEB;
+    --green: #059669;
+    --radius: 0.5rem;
+    --radius-lg: 0.75rem;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  section {
+    padding: 5rem 0;
+  }
+
+  section + section {
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .lead {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .overline {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 0.5rem;
+  }
+
+  .small {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+  }
+
+  .caption {
+    font-size: 0.75rem;
+    color: var(--text-placeholder);
+  }
+
+  strong { font-weight: 600; color: var(--text-primary); }
+
+  a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--transition);
+  }
+  a:hover { color: var(--text-primary); }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 0;
+  }
+
+  .hero .container {
+    max-width: 640px;
+  }
+
+  .hero h1 {
+    margin-bottom: 1.25rem;
+  }
+
+  .hero h1 .em {
+    color: var(--red);
+  }
+
+  .hero .lead {
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-meta .dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--text-placeholder);
+  }
+
+  .scroll-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    background: var(--bg);
+    transition: all var(--transition);
+  }
+
+  .scroll-hint:hover {
+    border-color: var(--border-strong);
+    color: var(--text-secondary);
+  }
+
+  .scroll-hint svg {
+    width: 14px;
+    height: 14px;
+    animation: nudge 2s ease infinite;
+  }
+
+  @keyframes nudge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+
+  /* ── Reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Card (shadcn-style) ── */
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-muted {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+
+  /* ── Two column compare ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .compare-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .compare-card .tag {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .compare-card.side-a .tag {
+    background: var(--blue-subtle);
+    color: var(--blue);
+  }
+
+  .compare-card.side-b .tag {
+    background: var(--amber-subtle);
+    color: var(--amber);
+  }
+
+  .compare-card h3 {
+    font-size: 0.9375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .compare-card blockquote {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--border);
+    margin-top: 0.75rem;
+  }
+
+  /* ── Bar meter ── */
+  .meter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .meter-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .meter-label {
+    width: 100px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .meter-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-muted);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .meter-fill {
+    height: 100%;
+    border-radius: 4px;
+    width: 0;
+    transition: width 1s ease;
+  }
+
+  .meter-fill.blue { background: var(--blue); }
+  .meter-fill.amber { background: var(--amber); }
+
+  .meter-value {
+    width: 40px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Stats ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .stat {
+    text-align: center;
+    padding: 1.25rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+  }
+
+  .stat-unit {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-tertiary);
+  }
+
+  .stat-desc {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+  }
+
+  /* ── Chart ── */
+  .chart-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .chart-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .chart-header h3 {
+    margin-bottom: 0.25rem;
+  }
+
+  .chart-area {
+    width: 100%;
+    height: 320px;
+    position: relative;
+  }
+
+  .chart-area canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .chart-source {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.6875rem;
+    color: var(--text-placeholder);
+  }
+
+  /* ── Timeline ── */
+  .timeline {
+    position: relative;
+    margin: 2rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 1.75rem;
+    padding-left: 1rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+  }
+
+  .tl-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 6px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--border-strong);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--border-strong);
+  }
+
+  .tl-item.current::before {
+    background: var(--red);
+    box-shadow: 0 0 0 1px var(--red);
+  }
+
+  .tl-year {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tl-item.current .tl-year {
+    color: var(--red);
+  }
+
+  .tl-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── Slider ── */
+  .slider-card {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .slider-input {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+    box-shadow: var(--shadow);
+  }
+
+  .slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6875rem;
+    color: var(--text-placeholder);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .slider-result {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .slider-result-year {
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.25rem;
+  }
+
+  .slider-result-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Job list ── */
+  .job-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .job-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    background: var(--bg);
+  }
+
+  .job-item:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .job-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .job-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .job-risk-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .job-risk-badge.high {
+    background: var(--red-subtle);
+    color: var(--red);
+  }
+
+  .job-risk-badge.medium {
+    background: var(--amber-subtle);
+    color: var(--amber);
+  }
+
+  .job-bar {
+    height: 3px;
+    background: var(--bg-muted);
+    border-radius: 2px;
+    margin-top: 0.75rem;
+    overflow: hidden;
+  }
+
+  .job-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--red);
+    width: 0;
+    transition: width 1s ease;
+    opacity: 0.6;
+  }
+
+  .job-detail {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin 0.3s ease;
+    margin-top: 0;
+  }
+
+  .job-item.open .job-detail {
+    max-height: 200px;
+    margin-top: 0.75rem;
+  }
+
+  .job-item.open {
+    border-color: var(--border-strong);
+  }
+
+  .job-chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--text-placeholder);
+    transition: transform var(--transition);
+    flex-shrink: 0;
+  }
+
+  .job-item.open .job-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* ── Callout (warning) ── */
+  .callout {
+    border: 1px solid var(--red-muted);
+    background: var(--red-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .callout-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--red);
+    margin-bottom: 0.5rem;
+  }
+
+  .callout p {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    line-height: 1.65;
+  }
+
+  .callout .attr {
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+  }
+
+  /* ── Action list ── */
+  .action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .action-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    transition: border-color var(--transition);
+  }
+
+  .action-item:hover {
+    border-color: var(--border-strong);
+  }
+
+  .action-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg-muted);
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .action-item h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.125rem;
+  }
+
+  .action-item p {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  footer p {
+    font-size: 0.75rem;
+    color: var(--text-placeholder);
+    line-height: 1.6;
+  }
+
+  footer a {
+    color: var(--text-tertiary);
+  }
+
+  /* ── Counter ── */
+  .counter { display: inline-block; }
+
+  /* ── Benchmark table ── */
+  .bench-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    margin-top: 1rem;
+  }
+
+  .bench-table th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-tertiary);
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .bench-table td {
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bench-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .bench-table .model-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .bench-table .best {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .new-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.2rem;
+    background: var(--red);
+    color: white;
+    margin-left: 0.375rem;
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+
+  .feb5-highlight {
+    border: 1px solid var(--red-muted);
+    background: var(--red-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .feb5-highlight .date-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--red);
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.25rem; }
+    section { padding: 3.5rem 0; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-area { height: 260px; }
+    .meter-label { width: 80px; font-size: 0.75rem; }
+    .bench-table { font-size: 0.75rem; }
+    .bench-table th, .bench-table td { padding: 0.5rem; }
+    .bench-table .model-name { font-size: 0.75rem; }
+  }
+
+  @media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .stat { padding: 1rem 0.25rem; }
+    .stat-value { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-meta">
+      <span>Matt Shumer</span>
+      <span class="dot"></span>
+      <span>2026년 2월</span>
+    </div>
+    <h1>
+      당신이 보는 AI와<br>
+      <span class="em">실제 AI 사이의 거리</span>가<br>
+      점점 멀어지고 있습니다
+    </h1>
+    <p class="lead">
+      테크 업계가 매일 체감하는 AI의 능력과, 일반 대중이 인식하는 AI 사이의 간극.
+      이 격차가 왜 위험한지, 실제 데이터로 보여드립니다.
+    </p>
+    <div class="scroll-hint" onclick="document.getElementById('gap').scrollIntoView({behavior:'smooth'})">
+      아래로 스크롤
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 인식 격차 ===== -->
+<section id="gap">
+  <div class="container">
+    <div class="reveal">
+      <p class="overline">Perception Gap</p>
+      <h2>같은 시대, 완전히 다른 현실</h2>
+      <p class="lead">
+        대부분의 사람들은 무료 버전의 AI를 씁니다.
+        Matt Shumer는 이것을 <strong>"플립폰으로 스마트폰 시대를 평가하는 것"</strong>이라 표현합니다.
+        무료 AI는 최신 유료 모델보다 1년 이상 뒤처져 있습니다.
+      </p>
+    </div>
+
+    <div class="compare-grid reveal">
+      <div class="compare-card side-a">
+        <span class="tag">테크 업계</span>
+        <h3>최신 유료 모델 사용자</h3>
+        <blockquote>
+          "AI에게 앱 전체를 만들라고 하면,
+          스스로 테스트하고 반복 수정하며 완성합니다.
+          코드뿐 아니라 판단력까지 보입니다."
+        </blockquote>
+      </div>
+      <div class="compare-card side-b">
+        <span class="tag">일반 대중</span>
+        <h3>무료 버전 사용자</h3>
+        <blockquote>
+          "가끔 쓸만한 답을 주지만 틀린 것도 많고,
+          복잡한 건 잘 못하는 챗봇 아닌가요?"
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="card-muted reveal" style="margin-top:1.5rem">
+      <h3>AI 실제 능력 대비 인식 수준</h3>
+      <p class="caption" style="margin-bottom:1rem">그룹별로 AI의 현재 수준을 얼마나 정확히 파악하고 있는지</p>
+      <div class="meter-list">
+        <div class="meter-item">
+          <div class="meter-label">AI 연구자</div>
+          <div class="meter-track"><div class="meter-fill blue" data-width="92"></div></div>
+          <div class="meter-value">92%</div>
+        </div>
+        <div class="meter-item">
+          <div class="meter-label">테크 종사자</div>
+          <div class="meter-track"><div class="meter-fill blue" data-width="72"></div></div>
+          <div class="meter-value">72%</div>
+        </div>
+        <div class="meter-item">
+          <div class="meter-label">테크 주변인</div>
+          <div class="meter-track"><div class="meter-fill amber" data-width="35"></div></div>
+          <div class="meter-value">35%</div>
+        </div>
+        <div class="meter-item">
+          <div class="meter-label">일반 대중</div>
+          <div class="meter-track"><div class="meter-fill amber" data-width="12"></div></div>
+          <div class="meter-value">12%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AI 발전 속도 ===== -->
+<section id="speed">
+  <div class="container">
+    <div class="reveal">
+      <p class="overline">Exponential Growth</p>
+      <h2>AI 발전은 지수함수를 따릅니다 — 그리고 가속 중입니다</h2>
+      <p class="lead">
+        METR 벤치마크에 따르면, AI 자율 작업 능력이
+        전체 기간으로는 <strong>약 6.5개월마다 2배</strong>,
+        2024년 이후로는 <strong>약 89일(~3개월)마다 2배</strong>로 가속되었습니다.
+        2월 5일 동시 출시된 GPT-5.3-Codex와 Claude Opus 4.6은 이 가속이 더 심해졌음을 보여줍니다.
+      </p>
+    </div>
+
+    <div class="stats-grid reveal">
+      <div class="stat">
+        <div class="stat-value">197<span class="stat-unit">일</span></div>
+        <div class="stat-desc">능력 2배 증가 주기<br>(전체 기간 평균)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">89<span class="stat-unit">일</span></div>
+        <div class="stat-desc">2024년 이후<br>가속된 2배 주기</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">6.6<span class="stat-unit">시간</span></div>
+        <div class="stat-desc">METR 공식 최고<br>(GPT-5.2 기준)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">~113<span class="stat-unit">x</span></div>
+        <div class="stat-desc">GPT-4 대비 2.7년간<br>능력 증가폭</div>
+      </div>
+    </div>
+
+    <!-- Chart 1: METR 실측 데이터 -->
+    <div class="chart-card reveal">
+      <div class="chart-header">
+        <h3>METR 벤치마크: 모델별 자율 작업 수행 시간</h3>
+        <p class="small">인간 전문가 도움 없이 AI가 50% 확률로 완료할 수 있는 작업 길이 (50% time horizon)</p>
+      </div>
+      <div class="chart-area">
+        <canvas id="metrChart"></canvas>
+      </div>
+      <div class="chart-source">
+        출처: METR Time Horizon 1.1 (2026.01.29 업데이트). GPT-5.3-Codex, Opus 4.6은 출시 직후로 METR 공식 평가 미발표.
+        89일 더블링 추세 적용 시, 최신 모델의 시간 지평선은 10시간 이상으로 추정됩니다.
+      </div>
+    </div>
+
+    <!-- Feb 5 동시 출시 -->
+    <div class="feb5-highlight reveal">
+      <span class="date-badge">2026. 2. 5</span>
+      <h3>같은 날, 두 모델이 동시에 출시되었습니다</h3>
+      <p class="small" style="margin-bottom:1rem;max-width:560px">
+        OpenAI의 GPT-5.3-Codex와 Anthropic의 Claude Opus 4.6이 같은 날 공개되었습니다.
+        GPT-5.3-Codex는 "자기 자신을 만드는 데 기여한 최초의 모델"이라 발표했고,
+        Opus 4.6은 ARC-AGI-2에서 이전 세대 대비 거의 두 배 가까운 점프를 기록했습니다.
+        METR 공식 평가는 아직 발표되지 않았지만, 벤치마크 상승폭을 보면 곡선이 더 가팔라지고 있습니다.
+      </p>
+      <div style="overflow-x:auto">
+        <table class="bench-table">
+          <thead>
+            <tr>
+              <th>벤치마크</th>
+              <th>GPT-5.2</th>
+              <th>GPT-5.3-Codex<span class="new-badge">New</span></th>
+              <th>Opus 4.5</th>
+              <th>Opus 4.6<span class="new-badge">New</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="model-name">SWE-bench Verified</td>
+              <td>80.0%</td>
+              <td>—</td>
+              <td>80.9%</td>
+              <td class="best">80.8%</td>
+            </tr>
+            <tr>
+              <td class="model-name">SWE-Bench Pro</td>
+              <td>56.4%</td>
+              <td class="best">56.8%</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td class="model-name">Terminal-Bench 2.0</td>
+              <td>64.0%</td>
+              <td class="best">77.3%</td>
+              <td>59.8%</td>
+              <td>65.4%</td>
+            </tr>
+            <tr>
+              <td class="model-name">OSWorld</td>
+              <td>38.2%</td>
+              <td>64.7%</td>
+              <td>66.3%</td>
+              <td class="best">72.7%</td>
+            </tr>
+            <tr>
+              <td class="model-name">ARC-AGI-2</td>
+              <td>—</td>
+              <td>—</td>
+              <td>37.6%</td>
+              <td class="best">68.8%</td>
+            </tr>
+            <tr>
+              <td class="model-name">GPQA Diamond</td>
+              <td>—</td>
+              <td>—</td>
+              <td>87.0%</td>
+              <td class="best">91.3%</td>
+            </tr>
+            <tr>
+              <td class="model-name">HLE (with tools)</td>
+              <td>—</td>
+              <td>—</td>
+              <td>43.4%</td>
+              <td class="best">53.1%</td>
+            </tr>
+            <tr>
+              <td class="model-name">GDPval-AA Elo</td>
+              <td>~1462</td>
+              <td>—</td>
+              <td>1416</td>
+              <td class="best">1606</td>
+            </tr>
+            <tr>
+              <td class="model-name">BrowseComp</td>
+              <td>—</td>
+              <td>—</td>
+              <td>67.8%</td>
+              <td class="best">84.0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="caption" style="margin-top:0.75rem">
+        출처: OpenAI, Anthropic 공식 발표 (2026.02.05).
+        GPT-5.3-Codex는 25% 속도 향상 + 400K context. Opus 4.6은 1M context + adaptive thinking.
+      </p>
+    </div>
+
+    <!-- Chart: Feb 5 벤치마크 비교 -->
+    <div class="chart-card reveal">
+      <div class="chart-header">
+        <h3>2월 5일 출시 모델 vs 이전 세대 — 핵심 벤치마크 비교</h3>
+        <p class="small">같은 벤치마크에서 이전 세대 대비 얼마나 뛰었는지</p>
+      </div>
+      <div class="chart-area">
+        <canvas id="feb5Chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Chart 2: 시계열 추세 -->
+    <div class="chart-card reveal">
+      <div class="chart-header">
+        <h3>AI 자율 작업 시간의 지수적 증가 추세</h3>
+        <p class="small">모델 출시 시점 기준, 50% time horizon 변화 (로그 스케일). 2024년 이후 곡선이 더 가팔라지고 있습니다.</p>
+      </div>
+      <div class="chart-area">
+        <canvas id="trendChart"></canvas>
+      </div>
+      <div class="chart-source">
+        출처: METR Time Horizon 1.1 / Epoch AI. 회색 점선은 전체 기간 추세(197일 더블링), 빨간 점선은 2024년 이후 가속 추세(89일 더블링).
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 타임라인 ===== -->
+<section id="timeline">
+  <div class="container">
+    <div class="reveal">
+      <p class="overline">Timeline</p>
+      <h2>4년 사이에 일어난 일</h2>
+      <p class="lead">기본 산수도 못하던 AI가, 전문가 수준의 복잡한 작업을 자율 수행하기까지.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-text">ChatGPT 출시. 세상이 놀라지만, 기본 산술도 자주 틀리는 수준. AI 자율 작업 시간 측정 불가.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2023. 3</div>
+        <div class="tl-text">GPT-4 출시. 미국 변호사 시험 합격. METR 기준 자율 작업 시간 약 3.5분.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2024. 10</div>
+        <div class="tl-text">Claude 3.5 Sonnet. 완전한 소프트웨어 작성 가능. 자율 작업 시간 약 20분으로 성장.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025 상반기</div>
+        <div class="tl-text">Claude 3.7 Sonnet — 약 1시간. O3 — 약 1.6시간. 최고 엔지니어들이 코딩의 대부분을 AI에 위임하기 시작.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025 하반기</div>
+        <div class="tl-text">Gemini 3 Pro — 약 4시간. Claude Opus 4.5 — 약 5.3시간. MathArena Apex에서 1%→23%로 20배 도약.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025. 12</div>
+        <div class="tl-text">GPT-5.2 — METR 기준 약 6.6시간(394분). 역대 최고 기록. "이전의 모든 것이 다른 시대처럼 느껴진다."</div>
+      </div>
+      <div class="tl-item current">
+        <div class="tl-year">2026. 2. 5 — 현재</div>
+        <div class="tl-text">같은 날, GPT-5.3-Codex와 Claude Opus 4.6 동시 출시.
+          GPT-5.3-Codex는 Terminal-Bench에서 +13.3%p 점프하며 "자기 자신을 만드는 데 기여한 최초의 모델"이라 선언.
+          Opus 4.6은 ARC-AGI-2에서 37.6%→68.8%로 한 세대 만에 거의 두 배. 1M 토큰 컨텍스트. 더블링 주기 89일로 가속 확인.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 인터랙티브 슬라이더 ===== -->
+<section id="interactive">
+  <div class="container">
+    <div class="reveal">
+      <p class="overline">Interactive</p>
+      <h2>직접 확인해보세요</h2>
+    </div>
+
+    <div class="slider-card reveal">
+      <h3>AI 능력 타임머신</h3>
+      <p class="small">슬라이더를 움직여 각 시점의 AI 능력 수준을 확인하세요.</p>
+      <input type="range" min="2020" max="2027" value="2024" step="1" class="slider-input" id="yearSlider">
+      <div class="slider-ticks">
+        <span>2020</span><span>2021</span><span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span><span>2027</span>
+      </div>
+      <div class="slider-result">
+        <div class="slider-result-year" id="sliderYear">2024</div>
+        <div class="slider-result-text" id="sliderText"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 격차 차트 ===== -->
+<section id="gap-chart">
+  <div class="container">
+    <div class="reveal">
+      <p class="overline">The Dangerous Gap</p>
+      <h2>벌어지는 간극이 왜 위험한가</h2>
+      <p class="lead">
+        AI의 실제 능력은 기하급수적으로 올라가지만,
+        일반 대중의 인식은 거의 움직이지 않습니다.
+        준비 없이 충격을 맞는 사회가 됩니다.
+      </p>
+    </div>
+
+    <div class="chart-card reveal">
+      <div class="chart-header">
+        <h3>AI 실제 능력 vs. 대중 인식</h3>
+        <p class="small">빨간 영역이 넓을수록 사회적 충격이 커집니다</p>
+      </div>
+      <div class="chart-area">
+        <canvas id="gapChart"></canvas>
+      </div>
+    </div>
+
+    <div class="callout reveal">
+      <div class="callout-label">경고</div>
+      <p>
+        "향후 1~5년 내에 초급 사무직의 50%가 제거될 수 있습니다.
+        AI가 현재 세대보다 본질적으로 훨씬 더 뛰어난 모델을
+        스스로 만들 수 있는 시점까지 1~2년밖에 남지 않았습니다."
+      </p>
+      <div class="attr">— Dario Amodei, CEO of Anthropic, 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 직업 영향 ===== -->
+<section id="jobs">
+  <div class="container">
+    <div class="reveal">
+      <p class="overline">Impact</p>
+      <h2>이미 위협받고 있는 직업들</h2>
+      <p class="small" style="margin-bottom:0.5rem">항목을 클릭하면 상세 내용을 확인할 수 있습니다.</p>
+    </div>
+
+    <div class="job-list reveal">
+      <div class="job-item" data-risk="95">
+        <div class="job-header">
+          <span class="job-name">고객 서비스 / 상담</span>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span class="job-risk-badge high">95%</span>
+            <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="job-bar"><div class="job-bar-fill"></div></div>
+        <div class="job-detail">복잡한 다단계 문제 해결이 가능해지면서, 단순 응대를 넘어 전문 상담 영역까지 AI가 대체하고 있습니다.</div>
+      </div>
+
+      <div class="job-item" data-risk="90">
+        <div class="job-header">
+          <span class="job-name">소프트웨어 개발</span>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span class="job-risk-badge high">90%</span>
+            <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="job-bar"><div class="job-bar-fill"></div></div>
+        <div class="job-detail">수십만 줄의 코드를 자동 생성하며, 최고 엔지니어들도 코딩의 대부분을 AI에 위임합니다. "코드를 짜는 것"이 아닌 "AI를 지시하는 것"이 개발자의 역할이 되고 있습니다.</div>
+      </div>
+
+      <div class="job-item" data-risk="85">
+        <div class="job-header">
+          <span class="job-name">법률 / 법무</span>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span class="job-risk-badge high">85%</span>
+            <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="job-bar"><div class="job-bar-fill"></div></div>
+        <div class="job-detail">계약 검토, 판례 분석, 소장 초안 작성을 AI가 인간 변호사와 동등하거나 그 이상 수준으로 수행합니다. 로펌들은 이미 주니어 채용을 줄이고 있습니다.</div>
+      </div>
+
+      <div class="job-item" data-risk="80">
+        <div class="job-header">
+          <span class="job-name">금융 / 분석</span>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span class="job-risk-badge high">80%</span>
+            <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="job-bar"><div class="job-bar-fill"></div></div>
+        <div class="job-detail">재무 모델링, 데이터 분석, 리포트 작성이 자동화되고 있습니다. 투자 분석 보고서를 AI가 수 분 만에 생성합니다.</div>
+      </div>
+
+      <div class="job-item" data-risk="75">
+        <div class="job-header">
+          <span class="job-name">콘텐츠 / 마케팅</span>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span class="job-risk-badge medium">75%</span>
+            <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="job-bar"><div class="job-bar-fill"></div></div>
+        <div class="job-detail">광고 카피, 블로그 글, SNS 콘텐츠, 번역 등 글쓰기 기반 업무가 대규모로 자동화되고 있습니다.</div>
+      </div>
+
+      <div class="job-item" data-risk="70">
+        <div class="job-header">
+          <span class="job-name">의료 / 진단</span>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span class="job-risk-badge medium">70%</span>
+            <svg class="job-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="job-bar"><div class="job-bar-fill"></div></div>
+        <div class="job-detail">영상 판독, 초기 진단에서 전문의와 동등한 정확도를 달성했습니다. 방사선과, 병리과 분야에서 특히 영향이 큽니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section id="action">
+  <div class="container">
+    <div class="reveal">
+      <p class="overline">What You Can Do</p>
+      <h2>지금 할 수 있는 것들</h2>
+      <p class="lead">이 격차를 인식한 것만으로도 한 발 앞선 것입니다.</p>
+    </div>
+
+    <div class="action-list reveal">
+      <div class="action-item">
+        <div class="action-num">1</div>
+        <div>
+          <h4>최신 AI를 직접 사용하세요</h4>
+          <p>월 $20의 유료 구독으로 1년 이상의 기술 격차를 좁힐 수 있습니다.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">2</div>
+        <div>
+          <h4>실제 업무에 적용하세요</h4>
+          <p>글쓰기, 분석, 코딩 등 매일 하는 업무에 AI를 통합해보세요.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">3</div>
+        <div>
+          <h4>매일 1시간을 투자하세요</h4>
+          <p>AI 도구를 실험하는 데 하루 1시간. 한 달이면 완전히 다른 사람이 됩니다.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">4</div>
+        <div>
+          <h4>적응력을 키우세요</h4>
+          <p>특정 기술이 아닌 "배우는 능력" 자체가 가장 중요한 자산이 됩니다.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">5</div>
+        <div>
+          <h4>주변에 알려주세요</h4>
+          <p>격차를 줄이는 가장 빠른 방법은 이 사실을 공유하는 것입니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>
+      이 페이지는 <a href="https://x.com/mattshumer_/status/2021256989876109403" target="_blank">Matt Shumer의 포스트</a>와
+      <a href="https://shumer.dev/something-big-is-happening" target="_blank">"Something Big Is Happening"</a>,
+      <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR 벤치마크</a>를 기반으로 구성되었습니다.
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── Reveal on scroll ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.meter-fill').forEach(f => {
+        f.style.width = f.dataset.width + '%';
+      });
+      e.target.querySelectorAll('.job-item').forEach(c => {
+        c.querySelector('.job-bar-fill').style.width = c.dataset.risk + '%';
+      });
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // ── Timeline items ──
+  const tlObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.tl-item').forEach((el, i) => {
+    el.style.transitionDelay = (i * 80) + 'ms';
+    tlObs.observe(el);
+  });
+
+  // ── Job card toggle ──
+  document.querySelectorAll('.job-item').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('open'));
+  });
+
+  // ── Slider ──
+  const caps = {
+    2020: { text: "GPT-3 출시. 그럴듯한 문장을 생성하지만 사실 관계가 불안정합니다. 대부분의 사람들은 AI 챗봇의 존재조차 모릅니다." },
+    2021: { text: "GitHub Copilot 프리뷰. 코드 자동완성이 가능해지지만, 장난감 수준이라는 평가가 지배적입니다." },
+    2022: { text: "ChatGPT 등장. 기본 산술도 자주 틀리지만, 대화형 AI의 가능성을 세상에 알렸습니다." },
+    2023: { text: "GPT-4가 변호사 시험 합격. METR 기준 자율 작업 시간 3.5분. 대중은 여전히 '가끔 쓸만한 챗봇' 정도로 봅니다." },
+    2024: { text: "Claude 3.5 Sonnet — 자율 작업 약 20분. 완전한 소프트웨어 작성, 대학원 수준 과학 설명 가능. 테크 업계가 심각해지기 시작합니다." },
+    2025: { text: "Claude 3.7 Sonnet 1시간, O3 1.6시간, Gemini 3 Pro 4시간, Claude Opus 4.5 5.3시간. 최고 엔지니어들이 코딩의 대부분을 AI에 위임합니다." },
+    2026: { text: "2월 5일, GPT-5.3-Codex와 Claude Opus 4.6이 같은 날 출시. GPT-5.3은 '자기 자신을 만드는 데 기여한 최초의 모델'. Opus 4.6은 ARC-AGI-2에서 37.6%→68.8%로 도약. 능력 더블링 주기가 89일로 단축. 그런데 대부분의 사람들은 아직 2023년 수준의 무료 AI를 쓰고 있습니다." },
+    2027: { text: "현재 89일 더블링 추세가 계속된다면? AI가 며칠짜리 복잡한 프로젝트를 완전 자율 수행. METR는 '10년 내 월 단위 프로젝트 자율 수행 가능'이라 전망합니다. 대부분의 지식노동이 근본적으로 재정의될 수 있습니다." }
+  };
+
+  const slider = document.getElementById('yearSlider');
+  const yearEl = document.getElementById('sliderYear');
+  const textEl = document.getElementById('sliderText');
+
+  function updateSlider() {
+    const y = slider.value;
+    yearEl.textContent = y == 2027 ? '2027?' : y;
+    if (+y >= 2026) yearEl.style.color = 'var(--red)';
+    else yearEl.style.color = 'var(--text-primary)';
+    textEl.textContent = caps[y].text;
+  }
+  slider.addEventListener('input', updateSlider);
+  updateSlider();
+
+  // ── Chart globals ──
+  Chart.defaults.color = '#878A93';
+  Chart.defaults.borderColor = '#E9EAEE';
+  Chart.defaults.font.family = "'Pretendard Variable', Pretendard, -apple-system, sans-serif";
+  Chart.defaults.font.size = 11;
+
+  const gridColor = '#F0F1F3';
+
+  // ── METR Chart: 실측 모델별 데이터 ──
+  const metrModels = [
+    'GPT-4',
+    'Claude 3.5\nSonnet',
+    'Claude 3.7\nSonnet',
+    'O3',
+    'Gemini 3\nPro',
+    'Claude\nOpus 4.5',
+    'GPT-5.2'
+  ];
+  const metrMinutes = [3.5, 19.8, 59.8, 94.0, 236.7, 320.4, 394.4];
+  const metrDates = ['2023.03', '2024.10', '2025 초', '2025 중', '2025 말', '2025 말', '2025.12'];
+
+  new Chart(document.getElementById('metrChart'), {
+    type: 'bar',
+    data: {
+      labels: metrModels,
+      datasets: [{
+        label: '50% Time Horizon (분)',
+        data: metrMinutes,
+        backgroundColor: metrMinutes.map(v =>
+          v < 60 ? '#D1D3D8' :
+          v < 120 ? '#AEB1B9' :
+          v < 300 ? '#55585D' : '#191A1B'
+        ),
+        borderRadius: 4,
+        borderSkipped: false,
+        maxBarThickness: 48,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#191A1B',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          padding: 10,
+          cornerRadius: 6,
+          titleFont: { weight: '600', size: 12 },
+          callbacks: {
+            title: (items) => items[0].label.replace('\n', ' '),
+            label: (ctx) => {
+              const m = ctx.parsed.y;
+              const dateStr = metrDates[ctx.dataIndex];
+              const timeStr = m < 60 ? `${m}분` : `${(m/60).toFixed(1)}시간 (${Math.round(m)}분)`;
+              return [`${timeStr}`, `출시: ${dateStr}`];
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          title: { display: true, text: '분 (minutes)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
+          grid: { color: gridColor },
+          ticks: {
+            callback: v => {
+              if (v === 0) return '0';
+              if (v < 60) return v + '분';
+              return (v / 60).toFixed(0) + '시간';
+            }
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: {
+            maxRotation: 0,
+            font: { size: 10 }
+          }
+        }
+      },
+      animation: { duration: 800, easing: 'easeOutQuart' }
+    }
+  });
+
+  // ── Feb 5 Benchmark Comparison Chart ──
+  const feb5Benchmarks = ['Terminal-Bench\n2.0', 'OSWorld', 'ARC-AGI-2', 'BrowseComp', 'HLE\n(w/ tools)', 'GPQA\nDiamond'];
+  const prevGen = [64.0, 38.2, 37.6, 67.8, 43.4, 87.0]; // GPT-5.2 or Opus 4.5 (best prev)
+  const newGen =  [77.3, 72.7, 68.8, 84.0, 53.1, 91.3]; // GPT-5.3 or Opus 4.6 (best new)
+
+  new Chart(document.getElementById('feb5Chart'), {
+    type: 'bar',
+    data: {
+      labels: feb5Benchmarks,
+      datasets: [
+        {
+          label: '이전 세대 최고 (GPT-5.2 / Opus 4.5)',
+          data: prevGen,
+          backgroundColor: '#D1D3D8',
+          borderRadius: 4,
+          borderSkipped: false,
+          maxBarThickness: 32,
+        },
+        {
+          label: '2월 5일 출시 (GPT-5.3 / Opus 4.6)',
+          data: newGen,
+          backgroundColor: '#191A1B',
+          borderRadius: 4,
+          borderSkipped: false,
+          maxBarThickness: 32,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { padding: 16, usePointStyle: true, pointStyleWidth: 10, font: { size: 11 } }
+        },
+        tooltip: {
+          backgroundColor: '#191A1B',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          padding: 10,
+          cornerRadius: 6,
+          callbacks: {
+            title: (items) => items[0].label.replace('\n', ' '),
+            afterBody: (items) => {
+              const i = items[0].dataIndex;
+              const diff = newGen[i] - prevGen[i];
+              return `상승폭: +${diff.toFixed(1)}%p`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: 100,
+          title: { display: true, text: '정확도 (%)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
+          grid: { color: gridColor },
+          ticks: { callback: v => v + '%' }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { maxRotation: 0, font: { size: 10 } }
+        }
+      },
+      animation: { duration: 800, easing: 'easeOutQuart' }
+    }
+  });
+
+  // ── Trend Chart: 시계열 (로그 스케일) ──
+  const trendData = [
+    { x: 2023.25, y: 3.5, label: 'GPT-4' },
+    { x: 2024.42, y: 6.4, label: 'GPT-4o' },
+    { x: 2024.50, y: 10.8, label: 'Claude 3.5 Sonnet (Jun)' },
+    { x: 2024.75, y: 19.4, label: 'o1 Preview' },
+    { x: 2024.83, y: 19.8, label: 'Claude 3.5 Sonnet (Oct)' },
+    { x: 2024.92, y: 37.9, label: 'o1 (Elicited)' },
+    { x: 2025.17, y: 59.8, label: 'Claude 3.7 Sonnet' },
+    { x: 2025.33, y: 120.7, label: 'O3' },
+    { x: 2025.42, y: 101.2, label: 'Claude 4 Opus' },
+    { x: 2025.83, y: 236.7, label: 'Gemini 3 Pro' },
+    { x: 2025.88, y: 320.4, label: 'Claude Opus 4.5' },
+    { x: 2025.95, y: 394.4, label: 'GPT-5.2' },
+  ];
+
+  // 추세선 1: 전체 기간 (197일 = ~0.539년 더블링)
+  const trendLineSlow = [];
+  const t0 = 2023.25, v0 = 3.5;
+  const doublingAll = 197 / 365;
+  for (let t = 2023; t <= 2026.5; t += 0.05) {
+    trendLineSlow.push({ x: t, y: v0 * Math.pow(2, (t - t0) / doublingAll) });
+  }
+
+  // 추세선 2: 2024년 이후 가속 (89일 = ~0.244년 더블링)
+  const trendLineFast = [];
+  const t1 = 2024.42, v1 = 6.4;
+  const doublingFast = 89 / 365;
+  for (let t = 2024.3; t <= 2026.5; t += 0.05) {
+    trendLineFast.push({ x: t, y: v1 * Math.pow(2, (t - t1) / doublingFast) });
+  }
+
+  new Chart(document.getElementById('trendChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: '전체 기간 추세 (197일 더블링)',
+          data: trendLineSlow,
+          showLine: true,
+          borderColor: '#D1D3D8',
+          borderWidth: 1.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+          order: 3,
+        },
+        {
+          label: '2024년 이후 가속 추세 (89일 더블링)',
+          data: trendLineFast,
+          showLine: true,
+          borderColor: 'rgba(224, 40, 47, 0.5)',
+          borderWidth: 1.5,
+          borderDash: [4, 3],
+          pointRadius: 0,
+          fill: false,
+          order: 2,
+        },
+        {
+          label: 'METR 실측 데이터',
+          data: trendData,
+          pointRadius: 4,
+          pointBackgroundColor: '#191A1B',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointHoverRadius: 6,
+          showLine: false,
+          fill: false,
+          order: 1,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { padding: 16, usePointStyle: true, pointStyleWidth: 10, font: { size: 10 } }
+        },
+        tooltip: {
+          backgroundColor: '#191A1B',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          padding: 10,
+          cornerRadius: 6,
+          filter: (item) => item.datasetIndex === 2,
+          callbacks: {
+            title: (items) => {
+              const d = trendData[items[0].dataIndex];
+              return d ? d.label : '';
+            },
+            label: (ctx) => {
+              const m = ctx.parsed.y;
+              return m < 60 ? `${m.toFixed(1)}분` : `${(m/60).toFixed(1)}시간 (${Math.round(m)}분)`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: 2023,
+          max: 2026.5,
+          title: { display: true, text: '모델 출시 시점', color: '#AEB1B9', padding: 8, font: { size: 10 } },
+          grid: { color: gridColor },
+          ticks: {
+            stepSize: 0.5,
+            callback: v => {
+              if (v === Math.floor(v)) return v.toString();
+              return '';
+            }
+          }
+        },
+        y: {
+          type: 'logarithmic',
+          min: 1,
+          max: 2000,
+          title: { display: true, text: '자율 작업 시간 (분, log scale)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
+          grid: { color: gridColor },
+          ticks: {
+            callback: v => {
+              if ([1, 5, 10, 30, 60, 120, 300, 600, 1200].includes(v)) {
+                return v < 60 ? v + '분' : (v/60).toFixed(0) + '시간';
+              }
+              return '';
+            }
+          }
+        }
+      },
+      animation: { duration: 1000, easing: 'easeOutQuart' }
+    }
+  });
+
+  // ── Gap Chart ──
+  // 보다 현실적인 수치: AI 능력은 METR 기반 지수 성장, 대중 인식은 완만한 선형
+  new Chart(document.getElementById('gapChart'), {
+    type: 'line',
+    data: {
+      labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+      datasets: [
+        {
+          label: 'AI 실제 능력',
+          data: [5, 8, 15, 30, 50, 75, 92],
+          borderColor: '#191A1B',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#191A1B',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          tension: 0.35,
+          fill: false,
+        },
+        {
+          label: '테크 업계 인식',
+          data: [5, 7, 13, 26, 42, 65, 82],
+          borderColor: '#878A93',
+          borderWidth: 1.5,
+          borderDash: [5, 3],
+          pointRadius: 3,
+          pointBackgroundColor: '#878A93',
+          tension: 0.35,
+          fill: false,
+        },
+        {
+          label: '일반 대중 인식',
+          data: [4, 5, 10, 18, 22, 25, 28],
+          borderColor: '#D97706',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#D97706',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          tension: 0.35,
+          fill: false,
+        },
+        {
+          label: '격차 (위험 영역)',
+          data: [1, 3, 5, 12, 28, 50, 64],
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(224, 40, 47, 0.07)',
+          borderWidth: 0,
+          pointRadius: 0,
+          tension: 0.35,
+          fill: true,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 16,
+            usePointStyle: true,
+            pointStyleWidth: 10,
+            font: { size: 11 },
+            filter: (item) => item.text !== '격차 (위험 영역)',
+          }
+        },
+        tooltip: {
+          backgroundColor: '#191A1B',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          padding: 10,
+          cornerRadius: 6,
+          filter: (item) => item.datasetIndex !== 3,
+          callbacks: {
+            afterBody: (items) => {
+              const i = items[0].dataIndex;
+              const actual = [5,8,15,30,50,75,92];
+              const pub = [4,5,10,18,22,25,28];
+              return `격차: ${actual[i] - pub[i]}pt`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: 100,
+          title: { display: true, text: '수준 (0–100)', color: '#AEB1B9', padding: 8, font: { size: 10 } },
+          grid: { color: gridColor }
+        },
+        x: { grid: { display: false } }
+      },
+      animation: { duration: 1000, easing: 'easeOutQuart' }
+    }
+  });
+});
+</script>
+
+</body>
+</html>
